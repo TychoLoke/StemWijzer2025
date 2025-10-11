@@ -28,8 +28,9 @@ const SeatTooltip = ({ active, payload }: any) => {
 };
 
 export const CoalitionBuilder = () => {
-  const [presetKey, setPresetKey] = useState<keyof typeof PRESETS>("Ipsos I&O – 29 sep 2025");
-  const [seats, setSeats] = useState<SeatMap>({ ...PRESETS["Ipsos I&O – 29 sep 2025"] });
+  const defaultPreset: keyof typeof PRESETS = "Peil.nl – 11 okt 2025";
+  const [presetKey, setPresetKey] = useState<keyof typeof PRESETS>(defaultPreset);
+  const [seats, setSeats] = useState<SeatMap>({ ...PRESETS[defaultPreset] });
   const [selected, setSelected] = useState<Record<string, boolean>>({});
 
   useEffect(() => {

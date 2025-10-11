@@ -19,21 +19,21 @@ export const PARTY_WEIGHTS: Record<string, Record<Axis, number>> = {
 };
 
 export const PARTY_BLURBS: Record<string, string> = {
-  "GroenLinks/PvdA": "Links & progressief: klimaat, onderwijs, sociale zekerheid, pro‑EU.",
-  SP: "Links & sociaal: betaalbaarheid, publieke diensten, minder markt, nationaal georiënteerd.",
-  "Partij voor de Dieren": "Eco‑progressief: dierenwelzijn, natuur, stevig klimaatbeleid.",
-  Volt: "Jong & Europees: innovatie, digitalisering, samenwerken in EU.",
-  D66: "Centrum‑progressief: onderwijs, vrijheid, Europa, tech.",
-  NSC: "Centrum & bestuurlijk: betrouwbaarheid, degelijkheid, hervormingen.",
-  CDA: "Centrum‑rechts: gezin, gemeenschapszin, nuchter bestuur.",
-  ChristenUnie: "Sociaal‑christelijk: zorg, waardigheid, rentmeesterschap.",
-  VVD: "Liberaal: ondernemen, minder regels, sterke economie.",
-  BBB: "Platteland & doen: boeren, regio, minder bureaucratie.",
-  JA21: "Conservatief‑liberaal: veiligheid, kernenergie, lagere lasten.",
-  PVV: "Nationaal‑conservatief: koopkracht, immigratie strakker, meer soevereiniteit.",
-  FVD: "Radicaal‑rechts/soeverein: eigen koers, herindustrialisatie, kernenergie.",
-  SGP: "Conservatief‑christelijk: traditie, stabiliteit, rentmeesterschap.",
-  DENK: "Sociaal‑progressief: inclusie, diversiteit, gelijke kansen.",
+  "GroenLinks/PvdA": "Klimaatkoploper: forse CO₂-reductie, investeert in onderwijs en zorg, wil Europa versterken.",
+  SP: "Betaalbaarheid eerst: hogere lonen, lagere rekeningen, stopt marktwerking in zorg en wonen.",
+  "Partij voor de Dieren": "Natuur & dieren centraal: krimp veestapel, stevige klimaatactie, eerlijk voedselbeleid.",
+  Volt: "Pan-Europees: grensoverschrijdende oplossingen, digitale rechten beschermen, investeren in innovatie.",
+  D66: "Sociaal-liberaal: kansengelijkheid in onderwijs, regie op klimaat, vaste plek voor Nederland in de EU.",
+  NSC: "Bestuurlijke vernieuwing: eerlijk bestuur, minder Haagse deals, herstel vertrouwen in publieke diensten.",
+  CDA: "Waardenpartij: sterke gemeenschappen, betaalbaar gezinshuis, verantwoordelijkheid voor boeren en middenstand.",
+  ChristenUnie: "Sociaal-christelijk: waardige zorg, bestaanszekerheid, rentmeesterschap voor de schepping.",
+  VVD: "Vrijheidsagenda: lagere lasten voor werkenden, sterke economie, stevige aanpak van criminaliteit.",
+  BBB: "Regio op 1: ruimte voor boeren, praktische klimaatoplossingen, minder regels voor ondernemers.",
+  JA21: "Conservatief-liberaal: strakke migratie, investeren in defensie, kernenergie voor zekerheid.",
+  PVV: "Nationaal-conservatief: koopkracht en zorg betaalbaar houden, grenzen scherper bewaken, meer Nederlandse soevereiniteit.",
+  FVD: "Radicaal soeverein: uit EU-integratie, herindustrialisatie, en stevig inzetten op kernenergie.",
+  SGP: "Traditioneel & verantwoordelijk: gezin, geloofsvrijheid, solide overheidsfinanciën en rentmeesterschap.",
+  DENK: "Inclusieve stem: strijdt tegen discriminatie, investeert in kansengelijkheid en internationale solidariteit.",
 };
 
 export const PARTY_COLORS: Record<string, string> = {
