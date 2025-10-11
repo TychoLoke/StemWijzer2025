@@ -33,14 +33,39 @@ const CustomTooltip = ({ active, payload }: any) => {
 const CustomLegend = ({ payload }: any) => {
   if (!payload) return null;
   return (
-    <div className="mt-2 flex items-center gap-4 text-white">
+    <div className="mt-2 flex flex-wrap items-center gap-3 text-white/90 text-xs sm:text-sm">
       {payload.map((item: any, index: number) => (
-        <div key={index} className="flex items-center gap-2 text-sm">
+        <div key={index} className="flex items-center gap-2">
           <span className="inline-block h-3 w-3 rounded" style={{ backgroundColor: item.color }} />
           <span>{item.value}</span>
         </div>
       ))}
     </div>
+  );
+};
+
+const UserLabel = ({ x, y, value }: any) => {
+  if (x == null || y == null) return null;
+  const paddingX = 12;
+  const paddingY = 6;
+  const textY = y - 16;
+  return (
+    <g transform={`translate(${x}, ${textY})`}>
+      <rect
+        x={-paddingX}
+        y={-paddingY}
+        rx={12}
+        ry={12}
+        width={paddingX * 2}
+        height={paddingY * 2}
+        fill="#0f172a"
+        stroke="#facc15"
+        strokeWidth={0.75}
+      />
+      <text x={0} y={3} textAnchor="middle" fontSize={11} fontWeight={700} fill="#facc15">
+        {value}
+      </text>
+    </g>
   );
 };
 
@@ -62,12 +87,12 @@ export const ResultsMap = ({ userVector, highlight, showAllLabels: showAllLabels
         x: axes.econ,
         y: axes.social,
         fill: partyColorSafe(name),
-        r: highlight?.includes(name) ? 6 : 4,
+        r: highlight?.includes(name) ? 7 : 5,
       })),
     [highlight],
   );
 
-  const youPoint = { name: "Jij", x: safeVector.econ, y: safeVector.social, fill: "#FFFFFF", r: 7 };
+  const youPoint = { name: "Jij", x: safeVector.econ, y: safeVector.social, fill: "#facc15", r: 8 };
 
   const downloadPng = async () => {
     const node = chartRef.current;
@@ -104,7 +129,7 @@ export const ResultsMap = ({ userVector, highlight, showAllLabels: showAllLabels
         x‑as: economie (links↔rechts) • y‑as: samenleving (progressief↔conservatief)
       </p>
       <div className="relative">
-        <ResponsiveContainer width="100%" height={280}>
+        <ResponsiveContainer width="100%" height={320}>
           <ScatterChart margin={{ top: 10, right: 20, bottom: 10, left: 0 }}>
             <ReferenceArea x1={-5} x2={0} y1={0} y2={5} fill="rgba(56,189,248,0.06)" strokeOpacity={0} />
             <ReferenceArea x1={0} x2={5} y1={0} y2={5} fill="rgba(253,186,116,0.06)" strokeOpacity={0} />
@@ -142,8 +167,8 @@ export const ResultsMap = ({ userVector, highlight, showAllLabels: showAllLabels
             </Scatter>
 
             <Scatter name="Jij" data={[youPoint]}>
-              <Cell key="you" fill="#ffffff" stroke="#000" strokeWidth={1.5} />
-              <LabelList dataKey="name" position="top" style={{ fill: "#fff", fontSize: 11, fontWeight: 700 }} />
+              <Cell key="you" fill="#facc15" stroke="#0f172a" strokeWidth={1.2} />
+              <LabelList dataKey="name" content={<UserLabel />} />
             </Scatter>
           </ScatterChart>
         </ResponsiveContainer>

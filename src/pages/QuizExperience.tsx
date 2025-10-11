@@ -254,7 +254,7 @@ export const QuizExperience = () => {
                 </div>
                 <p className="mb-2 text-sm text-white/80">{match.blurb}</p>
                 <div className="mb-2 text-sm text-white/90">Waarom match: {match.reason}</div>
-                <div className="grid grid-cols-5 gap-2 text-[10px] text-white/70">
+                <div className="grid grid-cols-2 gap-2 text-[10px] text-white/70 sm:grid-cols-3 lg:grid-cols-5">
                   {AXES.map((axis) => (
                     <div key={axis} className={`rounded-lg bg-gradient-to-r ${AXIS_GRADIENTS[axis]} p-2`}>
                       <div className="mb-1 font-semibold uppercase tracking-wide">{axis}</div>
