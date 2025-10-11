@@ -12,21 +12,19 @@ A modern, mobile-first React experience that lets Gen-Z voters explore their pol
 
 ## Development
 
-This project assumes a standard React toolchain (e.g. Vite or CRA). Key entry points:
-
-- `src/main.tsx` – bootstraps the React app.
-- `src/App.tsx` – app shell with tab navigation.
-- `src/pages/QuizExperience.tsx` – orchestrates the quiz flow via the `useQuizEngine` hook.
-- `src/components` – shared UI elements (Likert scale, axis chips, results map, coalition builder, etc.).
-- `src/data` – strongly typed datasets for axes, parties, questions, and polling presets.
-- `src/utils/quiz.ts` – quiz math helpers (user vector, similarity scoring, etc.).
-
-To start hacking, install dependencies and run your bundler/dev server of choice:
+Install dependencies and start the Vite dev server:
 
 ```bash
 npm install
 npm run dev
 ```
 
-> ℹ️ The repo intentionally omits bundler configuration since environments vary; drop these sources into your preferred React stack.
+## Production build
 
+Create an optimized production bundle (output in `dist/`):
+
+```bash
+npm run build
+```
+
+Deploy the generated `dist/` folder to any static hosting provider (e.g. Vercel). Configure the build command as `npm run build` and output directory as `dist`.
