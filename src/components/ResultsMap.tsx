@@ -1,5 +1,18 @@
 import { useMemo, useRef, useState } from "react";
-import { ResponsiveContainer, ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Cell, LabelList } from "recharts";
+import {
+  ResponsiveContainer,
+  ScatterChart,
+  Scatter,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  Cell,
+  LabelList,
+  ReferenceLine,
+  ReferenceArea,
+} from "recharts";
 import { partyColorSafe, PARTY_WEIGHTS } from "../data/parties";
 import type { Axis } from "../types";
 import PrimaryButton from "./PrimaryButton";
@@ -90,43 +103,57 @@ export const ResultsMap = ({ userVector, highlight, showAllLabels: showAllLabels
       <p className="mb-3 text-sm text-white/80">
         x‑as: economie (links↔rechts) • y‑as: samenleving (progressief↔conservatief)
       </p>
-      <ResponsiveContainer width="100%" height={280}>
-        <ScatterChart margin={{ top: 10, right: 20, bottom: 10, left: 0 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.12)" />
-          <XAxis
-            type="number"
-            dataKey="x"
-            name="Economie"
-            domain={[-5, 5]}
-            tick={{ fill: "#fff", fontSize: 10 }}
-            axisLine={{ stroke: "rgba(255,255,255,0.3)" }}
-            tickLine={{ stroke: "rgba(255,255,255,0.3)" }}
-          />
-          <YAxis
-            type="number"
-            dataKey="y"
-            name="Sociaal"
-            domain={[-5, 5]}
-            tick={{ fill: "#fff", fontSize: 10 }}
-            axisLine={{ stroke: "rgba(255,255,255,0.3)" }}
-            tickLine={{ stroke: "rgba(255,255,255,0.3)" }}
-          />
-          <Tooltip cursor={{ strokeDasharray: "3 3" }} content={<CustomTooltip />} />
-          <Legend content={<CustomLegend />} />
+      <div className="relative">
+        <ResponsiveContainer width="100%" height={280}>
+          <ScatterChart margin={{ top: 10, right: 20, bottom: 10, left: 0 }}>
+            <ReferenceArea x1={-5} x2={0} y1={0} y2={5} fill="rgba(56,189,248,0.06)" strokeOpacity={0} />
+            <ReferenceArea x1={0} x2={5} y1={0} y2={5} fill="rgba(253,186,116,0.06)" strokeOpacity={0} />
+            <ReferenceArea x1={-5} x2={0} y1={-5} y2={0} fill="rgba(134,239,172,0.06)" strokeOpacity={0} />
+            <ReferenceArea x1={0} x2={5} y1={-5} y2={0} fill="rgba(196,181,253,0.06)" strokeOpacity={0} />
+            <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.12)" />
+            <XAxis
+              type="number"
+              dataKey="x"
+              name="Economie"
+              domain={[-5, 5]}
+              tick={{ fill: "#fff", fontSize: 10 }}
+              axisLine={{ stroke: "rgba(255,255,255,0.3)" }}
+              tickLine={{ stroke: "rgba(255,255,255,0.3)" }}
+            />
+            <YAxis
+              type="number"
+              dataKey="y"
+              name="Sociaal"
+              domain={[-5, 5]}
+              tick={{ fill: "#fff", fontSize: 10 }}
+              axisLine={{ stroke: "rgba(255,255,255,0.3)" }}
+              tickLine={{ stroke: "rgba(255,255,255,0.3)" }}
+            />
+            <ReferenceLine x={0} stroke="rgba(255,255,255,0.35)" strokeDasharray="4 4" />
+            <ReferenceLine y={0} stroke="rgba(255,255,255,0.35)" strokeDasharray="4 4" />
+            <Tooltip cursor={{ strokeDasharray: "3 3" }} content={<CustomTooltip />} />
+            <Legend content={<CustomLegend />} />
 
-          <Scatter name="Partijen" data={partyPoints}>
-            {partyPoints.map((point, index) => (
-              <Cell key={`party-${index}`} fill={point.fill} />
-            ))}
-            {showAllLabels && <LabelList dataKey="name" position="top" style={{ fill: "#fff", fontSize: 10 }} />}
-          </Scatter>
+            <Scatter name="Partijen" data={partyPoints}>
+              {partyPoints.map((point, index) => (
+                <Cell key={`party-${index}`} fill={point.fill} />
+              ))}
+              {showAllLabels && <LabelList dataKey="name" position="top" style={{ fill: "#fff", fontSize: 10 }} />}
+            </Scatter>
 
-          <Scatter name="Jij" data={[youPoint]}>
-            <Cell key="you" fill="#ffffff" stroke="#000" strokeWidth={1.5} />
-            <LabelList dataKey="name" position="top" style={{ fill: "#fff", fontSize: 11, fontWeight: 700 }} />
-          </Scatter>
-        </ScatterChart>
-      </ResponsiveContainer>
+            <Scatter name="Jij" data={[youPoint]}>
+              <Cell key="you" fill="#ffffff" stroke="#000" strokeWidth={1.5} />
+              <LabelList dataKey="name" position="top" style={{ fill: "#fff", fontSize: 11, fontWeight: 700 }} />
+            </Scatter>
+          </ScatterChart>
+        </ResponsiveContainer>
+        <div className="pointer-events-none absolute inset-0 grid grid-cols-2 grid-rows-2 text-[10px] font-semibold uppercase tracking-wide text-white/40">
+          <div className="flex items-start justify-start p-2">sociaal-progressief</div>
+          <div className="flex items-start justify-end p-2 text-right">sociaal-conservatief</div>
+          <div className="flex items-end justify-start p-2">economisch-links</div>
+          <div className="flex items-end justify-end p-2 text-right">economisch-rechts</div>
+        </div>
+      </div>
       <div className="mt-3 text-xs text-white/70">
         💡 Tip: dichterbij = meer overeenstemming in economische & sociale koers.
       </div>
