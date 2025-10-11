@@ -22,18 +22,27 @@ const StickyNavigation = ({
 }) => {
   if (!visible) return null;
   return (
-    <div className="pointer-events-none fixed inset-x-0 bottom-0 mx-auto max-w-md p-4">
-      <div className="pointer-events-auto rounded-2xl bg-white/10 p-2 backdrop-blur">
-        <div className="flex items-center justify-between text-xs text-white/80">
-          <span>{Math.round(progress)}% klaar</span>
-          <div className="flex gap-2">
-            <button type="button" onClick={onPrev} className="rounded-xl bg-white/10 px-3 py-2 text-xs hover:bg-white/20">
-              ←
-            </button>
-            <PrimaryButton aria-label="volgende" onClick={onNext}>
-              →
-            </PrimaryButton>
+    <div className="pointer-events-none fixed inset-x-0 bottom-4 mx-auto w-full max-w-3xl px-4 sm:px-6">
+      <div className="pointer-events-auto flex items-center justify-between gap-4 rounded-2xl border border-white/10 bg-black/40 p-3 text-xs text-white/80 shadow-lg shadow-black/30 backdrop-blur-xl">
+        <div className="flex flex-1 items-center gap-3">
+          <span className="rounded-full border border-white/15 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.2em] text-white/70">
+            {Math.round(progress)}% klaar
+          </span>
+          <div className="hidden h-1 flex-1 overflow-hidden rounded-full bg-white/10 sm:block">
+            <div className="h-full bg-gradient-to-r from-amber-300 via-rose-300 to-fuchsia-400" style={{ width: `${progress}%` }} />
           </div>
+        </div>
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={onPrev}
+            className="rounded-full border border-white/20 px-4 py-2 text-xs text-white transition hover:bg-white/10"
+          >
+            ← Terug
+          </button>
+          <PrimaryButton aria-label="volgende" onClick={onNext}>
+            Volgende →
+          </PrimaryButton>
         </div>
       </div>
     </div>
