@@ -29,7 +29,10 @@ const StickyNavigation = ({
             {Math.round(progress)}% klaar
           </span>
           <div className="hidden h-1 flex-1 overflow-hidden rounded-full bg-white/10 sm:block">
-            <div className="h-full bg-gradient-to-r from-amber-300 via-rose-300 to-fuchsia-400" style={{ width: `${progress}%` }} />
+            <div
+              className="h-full bg-gradient-to-r from-[#c1121f] via-white to-[#003399]"
+              style={{ width: `${progress}%` }}
+            />
           </div>
         </div>
         <div className="flex items-center gap-2">
@@ -91,7 +94,7 @@ export const QuizExperience = () => {
         </div>
         <div className="h-2 w-full overflow-hidden rounded-full bg-white/10">
           <div
-            className="h-full bg-gradient-to-r from-fuchsia-400 via-rose-300 to-amber-300"
+            className="h-full bg-gradient-to-r from-[#c1121f] via-white to-[#003399]"
             style={{ width: `${progress}%` }}
           />
         </div>

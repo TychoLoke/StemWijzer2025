@@ -10,26 +10,33 @@ const App = () => {
   const [quizKey, setQuizKey] = useState(0);
 
   return (
-    <div className="relative min-h-screen overflow-x-hidden bg-[#05050b] text-white">
+    <div className="relative min-h-screen overflow-x-hidden bg-[#04060f] text-white">
       <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-[#09031b] via-[#05050b] to-[#03030a]" />
+        <div className="absolute inset-0 bg-gradient-to-br from-[#04060f] via-[#0b1035] to-[#1b0b16]" />
         <div
           className="absolute inset-0 opacity-70"
           style={{
-            background: "radial-gradient(circle at 12% 18%, rgba(249, 115, 22, 0.22), transparent 55%)",
+            background: "radial-gradient(circle at 16% 20%, rgba(193, 18, 31, 0.45), transparent 55%)",
           }}
         />
         <div
           className="absolute inset-0 opacity-60"
           style={{
-            background: "radial-gradient(circle at 88% 24%, rgba(168, 85, 247, 0.25), transparent 60%)",
+            background: "radial-gradient(circle at 82% 24%, rgba(0, 51, 153, 0.4), transparent 60%)",
           }}
         />
         <div
-          className="absolute inset-0 opacity-40"
+          className="absolute inset-0 opacity-50"
           style={{
             backgroundImage:
-              "linear-gradient(120deg, rgba(255,255,255,0.08) 0, rgba(255,255,255,0.01) 35%, rgba(255,255,255,0.12) 70%, rgba(255,255,255,0.02) 100%)",
+              "linear-gradient(115deg, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0.05) 30%, rgba(0,51,153,0.15) 65%, rgba(193,18,31,0.12) 100%)",
+          }}
+        />
+        <div
+          className="absolute inset-0 opacity-20"
+          style={{
+            backgroundImage:
+              "repeating-linear-gradient(90deg, rgba(255,255,255,0.18) 0, rgba(255,255,255,0.18) 2px, transparent 2px, transparent 16px)",
           }}
         />
       </div>
@@ -73,15 +80,15 @@ const App = () => {
               </div>
               <ul className="mt-6 space-y-3 text-sm text-white/75">
                 <li className="flex items-start gap-2">
-                  <span className="mt-1 h-2 w-2 rounded-full bg-amber-300" aria-hidden />
+                  <span className="mt-1 h-2 w-2 rounded-full bg-[#c1121f]" aria-hidden />
                   <span>Responsieve ervaring met glasachtige kaarten en duidelijke hiërarchie.</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="mt-1 h-2 w-2 rounded-full bg-fuchsia-300" aria-hidden />
+                  <span className="mt-1 h-2 w-2 rounded-full bg-white shadow-[0_0_0_1px_rgba(255,255,255,0.65)]" aria-hidden />
                   <span>Resultaten uitgelegd met persona’s, badges en as‑visualisaties.</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="mt-1 h-2 w-2 rounded-full bg-sky-300" aria-hidden />
+                  <span className="mt-1 h-2 w-2 rounded-full bg-[#003399]" aria-hidden />
                   <span>Coalitie‑bouwer met presets en zetelbewerkingen voor je eigen scenario’s.</span>
                 </li>
               </ul>
