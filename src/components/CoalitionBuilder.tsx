@@ -81,50 +81,74 @@ export const CoalitionBuilder = () => {
   );
 
   return (
-    <section className="rounded-2xl bg-white/5 p-4 shadow-lg shadow-black/20">
-      <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-        <h3 className="text-lg font-semibold">🧩 Coalitie‑bouwer</h3>
-        <div className="flex flex-wrap items-center gap-2 text-xs">
-          <span className="text-white/70">Preset:</span>
-          {Object.keys(PRESETS).map((key) => (
-            <button
-              type="button"
-              key={key}
-              onClick={() => setPresetKey(key as keyof typeof PRESETS)}
-              className={`rounded-lg px-2 py-1 ${presetKey === key ? "bg-white text-black" : "bg-white/10 text-white hover:bg-white/20"}`}
-            >
-              {key}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      <div className="mb-3 grid grid-cols-2 gap-2 text-[11px] text-white/80 sm:grid-cols-3">
-        {PARTIES_LIST.map((party) => (
-          <div key={party} className="flex items-center gap-2">
-            <span className="inline-block h-3 w-3 rounded" style={{ backgroundColor: partyColorSafe(party) }}></span>
-            <span className="truncate">{party}</span>
+    <section className="glass-panel relative rounded-2xl border border-white/10 bg-white/5 p-5 shadow-2xl shadow-black/30 backdrop-blur-xl">
+      <div className="pointer-events-none absolute -top-24 left-16 h-40 w-40 rounded-full bg-[#c1121f]/25 blur-3xl" aria-hidden />
+      <div className="pointer-events-none absolute -bottom-28 right-0 h-48 w-48 rounded-full bg-[#003399]/25 blur-3xl" aria-hidden />
+      <div className="glass-panel__content space-y-6">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h3 className="text-lg font-semibold sm:text-xl">
+              <span className="bg-gradient-to-r from-white via-white/85 to-white/60 bg-clip-text text-transparent">
+                🧩 Coalitie‑bouwer
+              </span>
+            </h3>
+            <p className="text-xs text-white/60 sm:text-sm">Bouw scenario’s vanuit de nieuwste peilingen en zie direct je meerderheid.</p>
           </div>
-        ))}
-      </div>
+          <div className="flex flex-wrap items-center gap-2 text-xs">
+            <span className="rounded-full border border-white/15 bg-white/10 px-3 py-1 text-white/70">Preset</span>
+            {Object.keys(PRESETS).map((key) => (
+              <button
+                type="button"
+                key={key}
+                onClick={() => setPresetKey(key as keyof typeof PRESETS)}
+                className={`rounded-full border px-3 py-1.5 transition ${
+                  presetKey === key
+                    ? "border-transparent bg-white text-black shadow-[0_4px_16px_rgba(255,255,255,0.25)]"
+                    : "border-white/15 bg-white/5 text-white hover:bg-white/10"
+                }`}
+              >
+                {key}
+              </button>
+            ))}
+          </div>
+        </div>
 
-      <div className="mb-2 text-xs text-white/80">
-        Totaal: <b>{totalSeats}</b>/150 • Geselecteerd: <b>{coalitionSeats}</b>
-        {majority && <span className="ml-1 rounded bg-white px-1.5 py-0.5 text-[10px] font-bold text-black">MEERDERHEID</span>}
-      </div>
-      <div className="mb-3 h-2 w-full overflow-hidden rounded-full bg-white/10">
-        <div className={`h-full ${majority ? "bg-green-300" : "bg-white"}`} style={{ width: `${percent}%` }} />
-      </div>
+        <div className="rounded-2xl border border-white/10 bg-black/25 p-4">
+          <div className="text-[11px] uppercase tracking-[0.35em] text-white/60">Partijkleuren</div>
+          <div className="mt-3 grid grid-cols-2 gap-2 text-[11px] text-white/80 sm:grid-cols-3">
+            {PARTIES_LIST.map((party) => (
+              <div key={party} className="flex items-center gap-2">
+                <span className="inline-block h-3 w-3 rounded" style={{ backgroundColor: partyColorSafe(party) }}></span>
+                <span className="truncate">{party}</span>
+              </div>
+            ))}
+          </div>
+        </div>
 
-      <div className="mb-4 grid gap-4 lg:grid-cols-2">
-        <div className="rounded-xl border border-white/10 bg-black/20 p-3">
-          <div className="mb-2 text-xs uppercase tracking-wide text-white/60">verdeling geselecteerde partijen</div>
-          {coalitionBreakdown.length === 0 ? (
-            <div className="rounded-lg border border-dashed border-white/20 p-6 text-center text-xs text-white/60">
-              Selecteer partijen om de visuele verdeling te zien.
-            </div>
-          ) : (
-            <ResponsiveContainer width="100%" height={barChartHeight}>
+        <div className="space-y-2 text-xs text-white/80">
+          <div>
+            Totaal: <b>{totalSeats}</b>/150 • Geselecteerd: <b>{coalitionSeats}</b>
+            {majority && <span className="ml-1 rounded bg-white px-1.5 py-0.5 text-[10px] font-bold text-black">MEERDERHEID</span>}
+          </div>
+          <div className="h-2 w-full overflow-hidden rounded-full border border-white/10 bg-white/10">
+            <div
+              className={`h-full ${
+                majority ? "bg-gradient-to-r from-lime-300 via-emerald-400 to-lime-200" : "bg-gradient-to-r from-white via-white/70 to-white/30"
+              }`}
+              style={{ width: `${percent}%` }}
+            />
+          </div>
+        </div>
+
+        <div className="grid gap-4 lg:grid-cols-2">
+          <div className="rounded-xl border border-white/10 bg-white/5 p-4 backdrop-blur-sm">
+            <div className="mb-2 text-xs uppercase tracking-wide text-white/60">verdeling geselecteerde partijen</div>
+            {coalitionBreakdown.length === 0 ? (
+              <div className="rounded-lg border border-dashed border-white/20 p-6 text-center text-xs text-white/60">
+                Selecteer partijen om de visuele verdeling te zien.
+              </div>
+            ) : (
+              <ResponsiveContainer width="100%" height={barChartHeight}>
               <BarChart
                 data={coalitionBreakdown}
                 layout="vertical"
@@ -144,11 +168,11 @@ export const CoalitionBuilder = () => {
               </BarChart>
             </ResponsiveContainer>
           )}
-        </div>
-        <div className="rounded-xl border border-white/10 bg-black/20 p-3">
-          <div className="mb-2 text-xs uppercase tracking-wide text-white/60">route naar 76 zetels</div>
-          <ResponsiveContainer width="100%" height={220}>
-            <PieChart>
+          </div>
+          <div className="rounded-xl border border-white/10 bg-white/5 p-4 backdrop-blur-sm">
+            <div className="mb-2 text-xs uppercase tracking-wide text-white/60">route naar 76 zetels</div>
+            <ResponsiveContainer width="100%" height={220}>
+              <PieChart>
               <Pie
                 data={pieData}
                 dataKey="value"
@@ -183,14 +207,16 @@ export const CoalitionBuilder = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-        {PARTIES_LIST.map((party) => (
-          <div
-            key={party}
-            className={`flex items-center justify-between rounded-xl border border-white/10 p-2 ${selected[party] ? "bg-white text-black" : "bg-white/5"}`}
-            style={{ borderLeft: `6px solid ${partyColorSafe(party)}` }}
-          >
-            <button type="button" onClick={() => toggleParty(party)} className="flex-1 text-left text-sm font-semibold">
+        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+          {PARTIES_LIST.map((party) => (
+            <div
+              key={party}
+              className={`flex items-center justify-between rounded-xl border border-white/10 p-3 transition ${
+                selected[party] ? "bg-white text-black shadow-[0_10px_30px_rgba(255,255,255,0.18)]" : "bg-white/5 hover:bg-white/10"
+              }`}
+              style={{ borderLeft: `6px solid ${partyColorSafe(party)}` }}
+            >
+              <button type="button" onClick={() => toggleParty(party)} className="flex-1 text-left text-sm font-semibold">
               <span
                 className="mr-2 inline-block h-2 w-2 rounded-full align-middle"
                 style={{ backgroundColor: partyColorSafe(party) }}
@@ -202,8 +228,8 @@ export const CoalitionBuilder = () => {
                 aria-label={`zetels voor ${party}`}
                 type="number"
                 inputMode="numeric"
-                className={`w-16 rounded-lg border-0 bg-white/10 px-2 py-1 text-right text-sm outline-none ${
-                  selected[party] ? "bg-black/10 text-black" : "text-white"
+                className={`w-16 rounded-lg border border-white/10 bg-white/10 px-2 py-1 text-right text-sm outline-none transition ${
+                  selected[party] ? "bg-black/5 text-black" : "text-white focus-visible:bg-white/15"
                 }`}
                 value={seats[party] ?? 0}
                 onChange={(event) => setSeat(party, parseInt(event.target.value || "0", 10))}
@@ -212,6 +238,7 @@ export const CoalitionBuilder = () => {
             </div>
           </div>
         ))}
+        </div>
       </div>
     </section>
   );

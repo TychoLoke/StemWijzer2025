@@ -109,19 +109,21 @@ export const QuizExperience = () => {
         <motion.section
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          className="rounded-2xl bg-white/5 p-4 shadow-lg shadow-black/20"
+          className="glass-panel rounded-2xl border border-white/10 bg-white/5 p-4 shadow-lg shadow-black/25 backdrop-blur"
         >
-          <h2 className="mb-2 text-lg font-semibold">Snel kiezen, zero gedoe</h2>
-          <ul className="mb-3 list-disc pl-5 text-sm text-white/80">
-            <li>25 stellingen • 1–5 (oneens → eens)</li>
-            <li>Persoonlijk <b>profiel</b> + partij‑uitleg</li>
-            <li>Kernwaarden‑weging voor preciezere matches</li>
-          </ul>
-          <div className="text-xs text-white/60">Tip: kies vanuit je gevoel. Je kunt altijd terug.</div>
-          <div className="mt-4 flex justify-end">
-            <PrimaryButton aria-label="start quiz" onClick={() => setStep(1)}>
-              Start ▶
-            </PrimaryButton>
+          <div className="glass-panel__content">
+            <h2 className="mb-2 text-lg font-semibold">Snel kiezen, zero gedoe</h2>
+            <ul className="mb-3 list-disc pl-5 text-sm text-white/80">
+              <li>25 stellingen • 1–5 (oneens → eens)</li>
+              <li>Persoonlijk <b>profiel</b> + partij‑uitleg</li>
+              <li>Kernwaarden‑weging voor preciezere matches</li>
+            </ul>
+            <div className="text-xs text-white/60">Tip: kies vanuit je gevoel. Je kunt altijd terug.</div>
+            <div className="mt-4 flex justify-end">
+              <PrimaryButton aria-label="start quiz" onClick={() => setStep(1)}>
+                Start ▶
+              </PrimaryButton>
+            </div>
           </div>
         </motion.section>
       )}
@@ -131,27 +133,29 @@ export const QuizExperience = () => {
           key={currentQuestion.id}
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          className="rounded-2xl bg-white/5 p-4 shadow-lg shadow-black/20"
+          className="glass-panel rounded-2xl border border-white/10 bg-white/5 p-4 shadow-lg shadow-black/25 backdrop-blur"
         >
-          <div className="mb-2 text-base font-semibold">{currentQuestion.text}</div>
-          {currentQuestion.hint && <div className="mb-2 text-xs text-white/70">{currentQuestion.hint}</div>}
-          <LikertScale value={answers[currentQuestion.id]} onChange={(value) => setAnswer(currentQuestion.id, value)} />
-          <div className="mt-2 rounded-xl bg-white/5 p-2 text-[11px] text-white/80">
-            <div className="mb-1 font-semibold">Wat betekent je keuze?</div>
-            <div>
-              Hoger (4‑5) = meer naar de rechter‑kant; Lager (1‑2) = meer naar de linker‑kant. Uitleg hieronder in gewone taal.
+          <div className="glass-panel__content space-y-3">
+            <div className="text-base font-semibold">{currentQuestion.text}</div>
+            {currentQuestion.hint && <div className="text-xs text-white/70">{currentQuestion.hint}</div>}
+            <LikertScale value={answers[currentQuestion.id]} onChange={(value) => setAnswer(currentQuestion.id, value)} />
+            <div className="rounded-xl border border-white/10 bg-white/5 p-2 text-[11px] text-white/80">
+              <div className="mb-1 font-semibold">Wat betekent je keuze?</div>
+              <div>
+                Hoger (4‑5) = meer naar de rechter‑kant; Lager (1‑2) = meer naar de linker‑kant. Uitleg hieronder in gewone taal.
+              </div>
             </div>
-          </div>
-          <QuestionWhy question={currentQuestion} />
-          <div className="mt-3 flex items-center justify-between text-xs text-white/70">
-            <span className="font-mono">Keuze: {answers[currentQuestion.id]}</span>
-            <div className="flex gap-2">
-              <button type="button" onClick={goPrev} className="rounded-xl bg-white/10 px-3 py-2 text-xs hover:bg-white/20">
-                Terug
-              </button>
-              <PrimaryButton aria-label="volgende vraag" onClick={goNext}>
-                Volgende
-              </PrimaryButton>
+            <QuestionWhy question={currentQuestion} />
+            <div className="flex items-center justify-between text-xs text-white/70">
+              <span className="font-mono">Keuze: {answers[currentQuestion.id]}</span>
+              <div className="flex gap-2">
+                <button type="button" onClick={goPrev} className="rounded-xl border border-white/20 bg-white/10 px-3 py-2 text-xs transition hover:bg-white/20">
+                  Terug
+                </button>
+                <PrimaryButton aria-label="volgende vraag" onClick={goNext}>
+                  Volgende
+                </PrimaryButton>
+              </div>
             </div>
           </div>
         </motion.section>
@@ -161,36 +165,40 @@ export const QuizExperience = () => {
         <motion.section
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          className="rounded-2xl bg-white/5 p-4 shadow-lg shadow-black/20"
+          className="glass-panel rounded-2xl border border-white/10 bg-white/5 p-4 shadow-lg shadow-black/25 backdrop-blur"
         >
-          <h2 className="mb-2 text-lg font-semibold">Kernwaarden</h2>
-          <p className="mb-3 text-sm text-white/80">Wat weegt voor jou zwaarder? Dit beïnvloedt de berekening.</p>
-          <div className="grid gap-3 sm:grid-cols-2">
-            {AXES.map((axis) => (
-              <div key={axis} className="rounded-xl border border-white/10 bg-white/5 p-3">
-                <div className="mb-1 text-sm font-semibold">
-                  {AXIS_COPY[axis].label} <span className="opacity-60">({axis})</span>
+          <div className="glass-panel__content space-y-4">
+            <div>
+              <h2 className="text-lg font-semibold">Kernwaarden</h2>
+              <p className="text-sm text-white/80">Wat weegt voor jou zwaarder? Dit beïnvloedt de berekening.</p>
+            </div>
+            <div className="grid gap-3 sm:grid-cols-2">
+              {AXES.map((axis) => (
+                <div key={axis} className="rounded-xl border border-white/10 bg-white/5 p-3">
+                  <div className="mb-1 text-sm font-semibold">
+                    {AXIS_COPY[axis].label} <span className="opacity-60">({axis})</span>
+                  </div>
+                  <div className="mb-2 text-[11px] text-white/70">
+                    Links: {AXIS_COPY[axis].left} • Rechts: {AXIS_COPY[axis].right}
+                  </div>
+                  <LikertScale value={importance[axis]} onChange={(value) => setImportance(axis, value)} />
                 </div>
-                <div className="mb-2 text-[11px] text-white/70">
-                  Links: {AXIS_COPY[axis].left} • Rechts: {AXIS_COPY[axis].right}
-                </div>
-                <LikertScale value={importance[axis]} onChange={(value) => setImportance(axis, value)} />
+              ))}
+            </div>
+            <div className="flex items-center justify-between text-xs text-white/70">
+              <span>Klaar? Ga door naar je resultaat.</span>
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={() => setStep(totalSteps)}
+                  className="rounded-xl border border-white/20 bg-white/10 px-3 py-2 text-xs transition hover:bg-white/20"
+                >
+                  Terug
+                </button>
+                <PrimaryButton aria-label="toon resultaat" onClick={() => setStep(totalSteps + 2)}>
+                  Resultaat ▶
+                </PrimaryButton>
               </div>
-            ))}
-          </div>
-          <div className="mt-3 flex items-center justify-between text-xs text-white/70">
-            <span>Klaar? Ga door naar je resultaat.</span>
-            <div className="flex gap-2">
-              <button
-                type="button"
-                onClick={() => setStep(totalSteps)}
-                className="rounded-xl bg-white/10 px-3 py-2 text-xs hover:bg-white/20"
-              >
-                Terug
-              </button>
-              <PrimaryButton aria-label="toon resultaat" onClick={() => setStep(totalSteps + 2)}>
-                Resultaat ▶
-              </PrimaryButton>
             </div>
           </div>
         </motion.section>
