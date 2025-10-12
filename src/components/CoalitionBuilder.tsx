@@ -14,6 +14,7 @@ import {
 } from "recharts";
 import { PRESETS } from "../data/presets";
 import { PARTIES_LIST, partyColorSafe } from "../data/parties";
+import CabinetForecast from "./CabinetForecast";
 import type { SeatMap } from "../types";
 
 const SeatTooltip = ({ active, payload }: any) => {
@@ -112,6 +113,8 @@ export const CoalitionBuilder = () => {
             ))}
           </div>
         </div>
+
+        <CabinetForecast seats={seats} presetLabel={presetKey} />
 
         <div className="rounded-2xl border border-white/10 bg-black/25 p-4">
           <div className="text-[11px] uppercase tracking-[0.35em] text-white/60">Partijkleuren</div>
