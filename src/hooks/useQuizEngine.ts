@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { Axis } from "../types";
 import { QUESTIONS, type Question } from "../data/questions";
 import {
@@ -92,6 +92,8 @@ export interface QuizEngineState {
   persona: Persona;
   badges: { emoji: string; text: string }[];
   answeredCount: number;
+  elapsedSeconds: number;
+  startedAt: number | null;
   resetAll: () => void;
   goNext: () => void;
   goPrev: () => void;
@@ -103,12 +105,44 @@ export const useQuizEngine = (): QuizEngineState => {
   const [step, setStep] = useState<number>(0);
   const [answers, setAnswers] = useState<Record<string, number>>(() => defaultAnswers(QUESTIONS));
   const [importance, setImportance] = useState<Record<Axis, number>>(() => defaultImportance());
+  const [startedAt, setStartedAt] = useState<number | null>(null);
+  const [elapsedSeconds, setElapsedSeconds] = useState<number>(0);
 
   const userVector = useMemo(() => buildUserVector(answers, importance, QUESTIONS), [answers, importance]);
   const matches = useMemo(() => buildPartyMatches(userVector), [userVector]);
   const persona = useMemo(() => personaFromVector(userVector), [userVector]);
   const badges = useMemo(() => buildBadges(userVector), [userVector]);
   const answeredCount = useMemo(() => getAnsweredCount(answers), [answers]);
+
+  useEffect(() => {
+    if (step === 0) {
+      setStartedAt(null);
+      setElapsedSeconds(0);
+      return;
+    }
+
+    if (step > 0 && !startedAt) {
+      setStartedAt(Date.now());
+    }
+  }, [step, startedAt]);
+
+  useEffect(() => {
+    if (!startedAt || step === 0) return;
+    const updateElapsed = () => {
+      setElapsedSeconds(Math.floor((Date.now() - startedAt) / 1000));
+    };
+
+    if (step >= totalSteps + 2) {
+      updateElapsed();
+      return;
+    }
+
+    updateElapsed();
+
+    if (typeof window === "undefined") return;
+    const interval = window.setInterval(updateElapsed, 1000);
+    return () => window.clearInterval(interval);
+  }, [startedAt, step, totalSteps]);
 
   const setAnswer = (questionId: string, value: number) => {
     setAnswers((prev) => ({ ...prev, [questionId]: value }));
@@ -122,6 +156,8 @@ export const useQuizEngine = (): QuizEngineState => {
     setAnswers(defaultAnswers(QUESTIONS));
     setImportance(defaultImportance());
     setStep(0);
+    setStartedAt(null);
+    setElapsedSeconds(0);
   };
 
   const goNext = () => setStep((current) => Math.min(totalSteps + 2, current + 1));
@@ -140,6 +176,8 @@ export const useQuizEngine = (): QuizEngineState => {
     persona,
     badges,
     answeredCount,
+    elapsedSeconds,
+    startedAt,
     resetAll,
     goNext,
     goPrev,

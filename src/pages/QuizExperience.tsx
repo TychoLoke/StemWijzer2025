@@ -12,11 +12,13 @@ import { shareProfile } from "../utils/share";
 const StickyNavigation = ({
   visible,
   progress,
+  remaining,
   onPrev,
   onNext,
 }: {
   visible: boolean;
   progress: number;
+  remaining: number;
   onPrev: () => void;
   onNext: () => void;
 }) => {
@@ -34,6 +36,9 @@ const StickyNavigation = ({
               style={{ width: `${progress}%` }}
             />
           </div>
+          <span className="hidden rounded-full border border-white/10 bg-white/5 px-2 py-1 text-[10px] uppercase tracking-[0.2em] text-white/60 sm:inline-flex">
+            Nog {remaining} stelling{remaining === 1 ? "" : "en"}
+          </span>
         </div>
         <div className="flex items-center gap-2">
           <button
@@ -46,6 +51,181 @@ const StickyNavigation = ({
           <PrimaryButton aria-label="volgende" onClick={onNext}>
             Volgende →
           </PrimaryButton>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+type StageKey = "intro" | "questions" | "values" | "results";
+
+const StepTimeline = ({
+  step,
+  totalSteps,
+  answeredCount,
+  onNavigate,
+}: {
+  step: number;
+  totalSteps: number;
+  answeredCount: number;
+  onNavigate: (stage: StageKey) => void;
+}) => {
+  const stages: { key: StageKey; label: string; helper: string }[] = [
+    { key: "intro", label: "Intro", helper: "Start" },
+    { key: "questions", label: "Stellingen", helper: `${answeredCount}/${totalSteps}` },
+    { key: "values", label: "Kernwaarden", helper: "Wegingen" },
+    { key: "results", label: "Resultaat", helper: "Matches" },
+  ];
+
+  const activeIndex = (() => {
+    if (step === 0) return 0;
+    if (step > 0 && step <= totalSteps) return 1;
+    if (step === totalSteps + 1) return 2;
+    return 3;
+  })();
+
+  const canAccessStage = (stage: StageKey) => {
+    if (stage === "intro") return true;
+    if (stage === "questions") return step > 0 || answeredCount > 0;
+    if (stage === "values") return step >= totalSteps + 1 || answeredCount === totalSteps;
+    if (stage === "results") return step >= totalSteps + 2;
+    return false;
+  };
+
+  return (
+    <div className="glass-panel mb-4 rounded-2xl border border-white/10 bg-white/5 p-3 text-xs text-white/70 shadow-lg shadow-black/25 backdrop-blur">
+      <div className="glass-panel__content">
+        <div className="flex items-center justify-between text-[11px] uppercase tracking-[0.35em] text-white/60">
+          <span>Jouw route</span>
+          <span>{Math.round((Math.min(step, totalSteps) / totalSteps) * 100)}%</span>
+        </div>
+        <div className="mt-3 flex items-center gap-3">
+          {stages.map((stage, index) => {
+            const reached = index < activeIndex;
+            const active = index === activeIndex;
+            const allowed = canAccessStage(stage.key);
+            return (
+              <div key={stage.key} className="flex flex-1 items-center gap-3">
+                <button
+                  type="button"
+                  onClick={() => allowed && onNavigate(stage.key)}
+                  disabled={!allowed}
+                  className={`flex flex-1 flex-col items-center justify-center rounded-xl border px-3 py-2 text-center transition ${
+                    active
+                      ? "border-white/40 bg-white text-black shadow-[0_12px_30px_rgba(255,255,255,0.25)]"
+                      : reached
+                      ? "border-white/25 bg-white/10 text-white"
+                      : "border-white/10 bg-white/5 text-white/60"
+                  } ${allowed ? "hover:bg-white/15" : "cursor-not-allowed opacity-60"}`}
+                >
+                  <span className="text-[11px] font-semibold uppercase tracking-[0.2em]">{stage.label}</span>
+                  <span className="mt-1 text-[10px] text-white/70">{stage.helper}</span>
+                </button>
+                {index < stages.length - 1 && (
+                  <div
+                    aria-hidden
+                    className={`h-0.5 flex-1 rounded-full bg-gradient-to-r ${
+                      index < activeIndex
+                        ? "from-white via-white/80 to-white/40"
+                        : "from-white/10 via-white/10 to-white/5"
+                    }`}
+                  />
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const SessionInsights = ({
+  totalSteps,
+  answeredCount,
+  answers,
+  elapsedSeconds,
+}: {
+  totalSteps: number;
+  answeredCount: number;
+  answers: Record<string, number>;
+  elapsedSeconds: number;
+}) => {
+  const answeredValues = Object.values(answers);
+  const distribution = answeredValues.reduce(
+    (acc, value) => {
+      if (value > 3) acc.agree += 1;
+      if (value < 3) acc.disagree += 1;
+      if (value === 1 || value === 5) acc.strong += 1;
+      return acc;
+    },
+    { agree: 0, disagree: 0, strong: 0 },
+  );
+
+  const open = Math.max(0, totalSteps - (distribution.agree + distribution.disagree));
+
+  const leaningScore = distribution.agree - distribution.disagree;
+  const leaningCopy = (() => {
+    if (leaningScore > 5) return "Overwegend instemmend";
+    if (leaningScore > 1) return "Lichte voorkeur";
+    if (leaningScore < -5) return "Kritische koers";
+    if (leaningScore < -1) return "Meer tegenstemmen";
+    return "Gebalanceerde antwoorden";
+  })();
+
+  const formatDuration = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, "0")}`;
+  };
+
+  const answeredRatio = totalSteps === 0 ? 0 : answeredCount / totalSteps;
+
+  return (
+    <div className="glass-panel mb-4 rounded-2xl border border-white/10 bg-gradient-to-br from-white/10 via-white/5 to-white/5 p-4 text-sm text-white/80 shadow-lg shadow-black/30 backdrop-blur">
+      <div className="glass-panel__content">
+        <div className="mb-3 flex items-center justify-between text-[11px] uppercase tracking-[0.35em] text-white/60">
+          <span>Live statistieken</span>
+          <span>{formatDuration(elapsedSeconds)}</span>
+        </div>
+        <div className="grid gap-3 sm:grid-cols-3">
+          <div className="rounded-xl border border-white/10 bg-black/20 p-3">
+            <div className="text-[11px] uppercase tracking-wide text-white/60">Voortgang</div>
+            <div className="mt-1 text-xl font-semibold text-white">{answeredCount}</div>
+            <div className="text-[11px] text-white/60">van {totalSteps} vragen met positie</div>
+            <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-white/10">
+              <div
+                className="h-full bg-gradient-to-r from-[#c1121f] via-white to-[#003399]"
+                style={{ width: `${Math.round(answeredRatio * 100)}%` }}
+              />
+            </div>
+          </div>
+          <div className="rounded-xl border border-white/10 bg-black/20 p-3">
+            <div className="text-[11px] uppercase tracking-wide text-white/60">Tonaliteit</div>
+            <div className="mt-1 text-xl font-semibold text-white">{leaningCopy}</div>
+            <div className="mt-2 grid grid-cols-3 gap-2 text-[11px]">
+              <div className="rounded-lg border border-white/10 bg-white/5 p-2 text-center">
+                <div className="font-semibold text-white">{distribution.agree}</div>
+                <div className="text-white/60">eens</div>
+              </div>
+              <div className="rounded-lg border border-white/10 bg-white/5 p-2 text-center">
+                <div className="font-semibold text-white">{open}</div>
+                <div className="text-white/60">open</div>
+              </div>
+              <div className="rounded-lg border border-white/10 bg-white/5 p-2 text-center">
+                <div className="font-semibold text-white">{distribution.disagree}</div>
+                <div className="text-white/60">oneens</div>
+              </div>
+            </div>
+          </div>
+          <div className="rounded-xl border border-white/10 bg-black/20 p-3">
+            <div className="text-[11px] uppercase tracking-wide text-white/60">Sterke signalen</div>
+            <div className="mt-1 text-xl font-semibold text-white">{distribution.strong}</div>
+            <div className="text-[11px] text-white/60">antwoorden op uiterste 1 of 5</div>
+            <div className="mt-2 rounded-lg border border-dashed border-white/20 p-2 text-[11px] text-white/70">
+              Tip: sterke meningen wegen extra mee bij kernwaarden.
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -66,6 +246,7 @@ export const QuizExperience = () => {
     persona,
     badges,
     answeredCount,
+    elapsedSeconds,
     resetAll,
     goNext,
     goPrev,
@@ -77,8 +258,42 @@ export const QuizExperience = () => {
 
   const copyProfile = () => shareProfile(persona, badges, userVector, matches);
 
+  const remainingQuestions = Math.max(0, totalSteps - Math.min(step, totalSteps));
+
+  const navigateStage = (stage: StageKey) => {
+    if (stage === "intro") {
+      setStep(0);
+      return;
+    }
+    if (stage === "questions") {
+      const target = step === 0 ? 1 : Math.min(Math.max(step, 1), totalSteps);
+      setStep(target);
+      return;
+    }
+    if (stage === "values") {
+      if (answeredCount === totalSteps || step >= totalSteps + 1) {
+        setStep(totalSteps + 1);
+      }
+      return;
+    }
+    if (stage === "results") {
+      if (step >= totalSteps + 2) {
+        setStep(totalSteps + 2);
+      }
+    }
+  };
+
   return (
     <>
+      <StepTimeline step={step} totalSteps={totalSteps} answeredCount={answeredCount} onNavigate={navigateStage} />
+
+      <SessionInsights
+        totalSteps={totalSteps}
+        answeredCount={answeredCount}
+        answers={answers}
+        elapsedSeconds={elapsedSeconds}
+      />
+
       <div className="mb-4">
         <div className="mb-1 flex items-center justify-between text-xs text-white/70">
           <span>
@@ -308,6 +523,7 @@ export const QuizExperience = () => {
       <StickyNavigation
         visible={step > 0 && step <= totalSteps}
         progress={(step / totalSteps) * 100}
+        remaining={remainingQuestions}
         onPrev={goPrev}
         onNext={goNext}
       />
