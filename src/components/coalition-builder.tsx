@@ -8,29 +8,11 @@ import { MAJORITY } from "@/lib/constants";
 import { parseMajorityHint } from "@/lib/time";
 import clsx from "clsx";
 import { getPartyColor, getPartyGradient } from "@/lib/party-colors";
-
-const PRESETS: { name: string; orientation: string; parties: string[] }[] = [
-  {
-    name: "Sociaal-progressief akkoord",
-    orientation: "centrumlinks",
-    parties: ["glpvda", "d66", "cda", "sp", "pvdd", "denk", "volt"],
-  },
-  {
-    name: "Nationaal rechts kabinet",
-    orientation: "rechts",
-    parties: ["pvv", "vvd", "ja21", "cda", "bbb", "sgp"],
-  },
-  {
-    name: "Brede midden-coalitie",
-    orientation: "centrum",
-    parties: ["vvd", "d66", "cda", "glpvda"],
-  },
-  {
-    name: "Ondernemerscoalitie",
-    orientation: "centrumrechts",
-    parties: ["vvd", "d66", "cda", "ja21", "bbb"],
-  },
-];
+import {
+  FEATURED_COALITION_PRESETS,
+  PARTY_ALIGNMENT,
+  resolveBlueprint,
+} from "@/lib/coalitions";
 
 interface CoalitionBuilderProps {
   parties: PartyProjection[];
@@ -107,6 +89,60 @@ export function CoalitionBuilder({ parties, sourceLabel }: CoalitionBuilderProps
   }, [totalSeats]);
 
   const likelyCoalitions = useMemo(() => {
+    type CoalitionOption = {
+      ids: string[];
+      seats: number;
+      overhang: number;
+      label: string;
+      parties: PartyProjection[];
+      gradient: string;
+      orientation?: string;
+    };
+
+    const describeOrientation = (scores: number[]) => {
+      if (scores.length === 0) return undefined;
+      const average = scores.reduce((sum, score) => sum + score, 0) / scores.length;
+      if (average <= -2) return "Links";
+      if (average < -0.5) return "Centrumlinks";
+      if (average <= 0.5) return "Centrum";
+      if (average <= 1.5) return "Centrumrechts";
+      if (average <= 2.5) return "Rechts";
+      return "Rechts-national";
+    };
+
+    const gradientForParties = (selectedParties: PartyProjection[]) => {
+      const swatches = selectedParties
+        .map((party) => getPartyColor(party.id).primary)
+        .slice(0, 3);
+      if (swatches.length === 1) {
+        swatches.push(swatches[0]);
+      }
+      return swatches.length > 1
+        ? `linear-gradient(120deg, ${swatches.join(", ")})`
+        : swatches[0] ?? "#312e81";
+    };
+
+    const curated: CoalitionOption[] = [];
+    const seen = new Set<string>();
+
+    FEATURED_COALITION_PRESETS.forEach((blueprint) => {
+      const resolved = resolveBlueprint(blueprint, partyMap);
+      if (resolved.parties.length < 2) return;
+      if (resolved.seats < MAJORITY) return;
+      const ids = resolved.parties.map((party) => party.id);
+      const key = [...ids].sort().join(",");
+      seen.add(key);
+      curated.push({
+        ids,
+        seats: resolved.seats,
+        overhang: resolved.seats - MAJORITY,
+        label: resolved.name,
+        parties: resolved.parties,
+        orientation: resolved.orientation,
+        gradient: gradientForParties(resolved.parties),
+      });
+    });
+
     const sortedParties = [...parties].sort((a, b) => b.seats - a.seats);
 
     const combinations: { ids: string[]; seats: number }[] = [];
@@ -130,36 +166,41 @@ export function CoalitionBuilder({ parties, sourceLabel }: CoalitionBuilderProps
 
     generate(0, [], 0);
 
-    const valid = combinations
+    const fallback = combinations
       .filter((combo) => combo.seats >= MAJORITY)
       .map((combo) => {
         const comboParties = combo.ids
           .map((id) => partyMap.get(id))
           .filter((party): party is PartyProjection => Boolean(party));
-        const label = comboParties.map((party) => party?.name).join(" + ");
+        if (comboParties.length < 2) {
+          return null;
+        }
+        const alignmentScores = comboParties.map(
+          (party) => PARTY_ALIGNMENT[party.id] ?? 0
+        );
+        const spread = Math.max(...alignmentScores) - Math.min(...alignmentScores);
+        if (spread > 3) {
+          return null;
+        }
+        const key = [...combo.ids].sort().join(",");
+        if (seen.has(key)) {
+          return null;
+        }
         const seats = combo.seats;
         const overhang = seats - MAJORITY;
-        const averageColor = comboParties
-          .map((party) => getPartyColor(party.id).primary)
-          .slice(0, 3);
-        if (averageColor.length === 1) {
-          averageColor.push(averageColor[0]);
-        }
         return {
           ids: combo.ids,
           seats,
           overhang,
-          label,
+          label: comboParties.map((party) => party?.name).join(" + "),
           parties: comboParties,
-          gradient:
-            averageColor.length > 1
-              ? `linear-gradient(120deg, ${averageColor.join(", ")})`
-              : averageColor[0] ?? "#312e81",
+          orientation: describeOrientation(alignmentScores),
+          gradient: gradientForParties(comboParties),
         };
       })
-      .filter((entry) => entry.parties.length >= 2);
+      .filter((entry): entry is CoalitionOption => Boolean(entry));
 
-    valid.sort((a, b) => {
+    fallback.sort((a, b) => {
       const diffA = a.overhang;
       const diffB = b.overhang;
       if (diffA !== diffB) {
@@ -171,7 +212,12 @@ export function CoalitionBuilder({ parties, sourceLabel }: CoalitionBuilderProps
       return b.seats - a.seats;
     });
 
-    return valid.slice(0, 4);
+    const availableSlots = Math.max(0, 4 - curated.length);
+    const combined = availableSlots > 0
+      ? [...curated, ...fallback.slice(0, availableSlots)]
+      : curated.slice(0, 4);
+
+    return combined.slice(0, 4);
   }, [parties, partyMap]);
 
   const toggleParty = useCallback(
@@ -395,8 +441,15 @@ export function CoalitionBuilder({ parties, sourceLabel }: CoalitionBuilderProps
                     aria-hidden
                   />
                   <div className="relative flex flex-col gap-2">
-                    <div className="flex items-center justify-between">
-                      <p className="text-sm font-semibold text-white">{coalition.label}</p>
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="space-y-0.5">
+                        {coalition.orientation && (
+                          <p className="text-[11px] font-semibold uppercase tracking-wide text-indigo-200">
+                            {coalition.orientation}
+                          </p>
+                        )}
+                        <p className="text-sm font-semibold text-white">{coalition.label}</p>
+                      </div>
                       <span className="rounded-full bg-slate-900/70 px-2 py-1 text-xs font-semibold text-white/90">
                         {coalition.seats} zetels
                       </span>
@@ -510,7 +563,7 @@ export function CoalitionBuilder({ parties, sourceLabel }: CoalitionBuilderProps
               Sneltoetsen om populaire scenario&apos;s te laden.
             </p>
             <div className="mt-4 grid gap-3 sm:grid-cols-2">
-              {PRESETS.map((preset) => {
+              {FEATURED_COALITION_PRESETS.map((preset) => {
                 const seats = preset.parties.reduce(
                   (sum, id) => sum + (partyMap.get(id)?.seats ?? 0),
                   0,
