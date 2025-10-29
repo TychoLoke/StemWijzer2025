@@ -1,14 +1,14 @@
 import { headers } from "next/headers";
 import { AppMode } from "@/lib/time";
-import { slotPeilingData } from "@/data/slotpeiling";
-import { SlotPeilingResponse } from "@/types/poll";
+import { exitPollSnapshot } from "@/data/exitpoll";
+import { ExitPollSnapshot } from "@/types/poll";
 
-function cloneSlotPeilingData(): SlotPeilingResponse {
+function cloneExitPollSnapshot(): ExitPollSnapshot {
   return {
-    ...slotPeilingData,
-    provider: { ...slotPeilingData.provider },
-    methodology: { ...slotPeilingData.methodology },
-    parties: slotPeilingData.parties.map((party) => ({ ...party })),
+    ...exitPollSnapshot,
+    provider: { ...exitPollSnapshot.provider },
+    methodology: { ...exitPollSnapshot.methodology },
+    parties: exitPollSnapshot.parties.map((party) => ({ ...party })),
   };
 }
 
@@ -41,20 +41,20 @@ function getFetchInit(mode: AppMode) {
   } as const;
 }
 
-export async function getSlotPeiling(mode: AppMode): Promise<SlotPeilingResponse> {
+export async function getExitPoll(mode: AppMode): Promise<ExitPollSnapshot> {
   const baseUrl = resolveBaseUrl();
   try {
-    const response = await fetch(`${baseUrl}/api/slotpeiling`, getFetchInit(mode));
+    const response = await fetch(`${baseUrl}/api/exitpoll`, getFetchInit(mode));
     if (!response.ok) {
       throw new Error(`Request failed with status ${response.status}`);
     }
     return response.json();
   } catch (error) {
     console.error(
-      `[slotpeiling] Failed to load data from ${baseUrl}/api/slotpeiling, falling back to bundled data.`,
+      `[exitpoll] Failed to load data from ${baseUrl}/api/exitpoll, falling back to bundled data.`,
       error,
     );
-    return cloneSlotPeilingData();
+    return cloneExitPollSnapshot();
   }
 }
 
@@ -66,20 +66,22 @@ export async function getSeats(mode: AppMode) {
       throw new Error(`Request failed with status ${response.status}`);
     }
     return response.json() as Promise<{
-      parties: SlotPeilingResponse["parties"];
+      parties: ExitPollSnapshot["parties"];
       majority: number;
       updatedAt: string;
+      sourceLabel?: string;
     }>;
   } catch (error) {
     console.error(
-      `[slotpeiling] Failed to load seat data from ${baseUrl}/api/seats, falling back to bundled data.`,
+      `[exitpoll] Failed to load seat data from ${baseUrl}/api/seats, falling back to bundled data.`,
       error,
     );
-    const fallback = cloneSlotPeilingData();
+    const fallback = cloneExitPollSnapshot();
     return {
       parties: fallback.parties,
       majority: fallback.majority,
       updatedAt: fallback.updatedAt,
+      sourceLabel: "exitpoll 21:15",
     };
   }
 }

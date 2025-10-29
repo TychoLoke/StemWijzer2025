@@ -107,6 +107,8 @@ export function MiniCoalition({ parties, majority }: MiniCoalitionProps) {
           ))}
         </div>
       </div>
+
+      <p className="text-[11px] text-slate-500">Meerderheid bij {majority} zetels. Dit is een exitpoll; de werkelijke uitslag kan afwijken.</p>
     </div>
   );
 }

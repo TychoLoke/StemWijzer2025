@@ -1,13 +1,11 @@
 export interface PartyProjection {
   id: string;
   name: string;
-  pct: number;
-  pctRange: [number, number];
   seats: number;
-  seatMargin: number;
+  seatDelta: number;
 }
 
-export interface SlotPeilingResponse {
+export interface ExitPollSnapshot {
   updatedAt: string;
   provider: {
     id: string;

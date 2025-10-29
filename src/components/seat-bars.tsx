@@ -39,13 +39,20 @@ export function SeatBars({ parties, majority }: SeatBarsProps) {
           className="relative"
           style={{ width: `${(majority / maxSeats) * 100}%` }}
         >
-          <div className="absolute inset-y-0 right-0 w-px bg-white/40" />
+          <div className="absolute inset-y-0 right-0 w-[2px] bg-white/50" />
         </div>
       </div>
       {sorted.map((party, index) => {
         const gradient = COLORS[index % COLORS.length];
         const width = Math.max((party.seats / maxSeats) * 100, 3);
-        const rangeLabel = `${party.pctRange[0].toFixed(1)}–${party.pctRange[1].toFixed(1)}%`;
+        const deltaLabel = party.seatDelta > 0 ? `+${party.seatDelta}` : `${party.seatDelta}`;
+        const deltaIcon = party.seatDelta > 0 ? "↑" : party.seatDelta < 0 ? "↓" : "→";
+        const deltaTone =
+          party.seatDelta > 0
+            ? "bg-emerald-500/20 text-emerald-100"
+            : party.seatDelta < 0
+              ? "bg-rose-500/20 text-rose-100"
+              : "bg-slate-700 text-slate-200";
         return (
           <div key={party.id} className="relative">
             <div className="flex items-center justify-between gap-4">
@@ -55,16 +62,19 @@ export function SeatBars({ parties, majority }: SeatBarsProps) {
                 </span>
                 <div className="flex flex-col">
                   <span className="text-base font-semibold text-white">{party.name}</span>
-                  <span className="text-xs text-slate-300">Range: {rangeLabel}</span>
+                  <span className="text-xs text-slate-300">{deltaIcon} {deltaLabel} t.o.v. vorige verkiezingen</span>
                 </div>
               </div>
-              <span className="text-sm font-medium text-slate-200">{party.pct.toFixed(1)}%</span>
+              <span className={clsx("inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold", deltaTone)}>
+                <span>{deltaIcon}</span>
+                <span>{deltaLabel}</span>
+              </span>
             </div>
             <div className="mt-2 h-3 w-full overflow-hidden rounded-full bg-slate-800" role="presentation">
               <div
                 className={clsx("h-full bg-gradient-to-r", gradient)}
                 style={{ width: `${width}%` }}
-                title={`Zetels: ${party.seats} ±${party.seatMargin} • Bandbreedte ${rangeLabel}`}
+                title={`Zetels: ${party.seats} • Δ ${deltaLabel}`}
               />
             </div>
           </div>
@@ -74,6 +84,9 @@ export function SeatBars({ parties, majority }: SeatBarsProps) {
         <div className="h-3 w-px bg-white/40" />
         <span>Streep geeft meerderheid ({majority} zetels)</span>
       </div>
+      <p className="text-xs text-slate-400">
+        Dit is een exitpoll; de werkelijke uitslag kan afwijken.
+      </p>
     </div>
   );
 }

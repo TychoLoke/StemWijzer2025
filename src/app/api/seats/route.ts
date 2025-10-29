@@ -1,10 +1,11 @@
 import { NextResponse } from "next/server";
-import { slotPeilingData } from "@/data/slotpeiling";
+import { exitPollSnapshot } from "@/data/exitpoll";
 
 export async function GET() {
   return NextResponse.json({
-    parties: slotPeilingData.parties,
-    majority: slotPeilingData.majority,
-    updatedAt: slotPeilingData.updatedAt,
+    parties: exitPollSnapshot.parties,
+    majority: exitPollSnapshot.majority,
+    updatedAt: exitPollSnapshot.updatedAt,
+    sourceLabel: "exitpoll 21:15",
   });
 }

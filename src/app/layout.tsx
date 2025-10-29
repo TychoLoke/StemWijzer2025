@@ -4,14 +4,14 @@ import { SITE_TZ } from "@/lib/constants";
 import { ReactNode } from "react";
 
 export const metadata: Metadata = {
-  title: "StemWijzer 2025 — Slotpeiling & Coalitiebouwer",
+  title: "StemWijzer 2025 — Exitpoll 21:15 & Coalitiebouwer",
   description:
-    "Volg de slotpeiling van Ipsos I&O en bouw coalities naar een meerderheid van 76 zetels.",
+    "Volg de exitpoll van Ipsos I&O (21:15) en bouw coalities naar een meerderheid van 76 zetels.",
   metadataBase: new URL("https://example.com"),
   openGraph: {
     title: "StemWijzer 2025",
     description:
-      "Live slotpeiling, countdown en coalitiebouwer met meerderheid van 76 zetels.",
+      "Live exitpoll-updates, 15-minuten cadence en coalitiebouwer met meerderheid van 76 zetels.",
   },
 };
 
@@ -27,7 +27,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                   StemWijzer 2025
                 </span>
                 <span className="text-lg font-semibold text-white">
-                  Slotpeiling & coalitiebouwer
+                  Exitpoll 21:15 & coalitiebouwer
                 </span>
               </div>
               <nav className="hidden gap-4 text-sm font-medium text-slate-300 md:flex">
@@ -35,7 +35,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                   Home
                 </a>
                 <a className="transition hover:text-white" href="/slotpeiling">
-                  Slotpeiling
+                  Exitpoll
                 </a>
                 <a className="transition hover:text-white" href="/coalitie">
                   Coalitiebouwer
@@ -49,7 +49,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           <main className="flex-1 bg-slate-950">{children}</main>
           <footer className="border-t border-white/10 bg-slate-900/80">
             <div className="mx-auto max-w-6xl px-4 py-6 text-sm text-slate-400">
-              Data: Ipsos I&O slotpeiling 28 okt 2025 · Tijdzone: {SITE_TZ}
+              Data: Ipsos I&O exitpoll 21:15 (29 okt 2025) · Tijdzone: {SITE_TZ}
             </div>
           </footer>
         </div>
