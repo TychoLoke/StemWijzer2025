@@ -81,7 +81,7 @@ export async function getSeats(mode: AppMode) {
       parties: fallback.parties,
       majority: fallback.majority,
       updatedAt: fallback.updatedAt,
-      sourceLabel: "exitpoll 21:45",
+      sourceLabel: "exitpoll 22:15",
     };
   }
 }
