@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { SITE_TZ } from "@/lib/constants";
+import { DATA_PROVIDER_LABEL, SITE_TZ } from "@/lib/constants";
 import { ReactNode } from "react";
 
 export const metadata: Metadata = {
-  title: "StemWijzer 2025 — Exitpoll 21:45 & Coalitiebouwer",
+  title: "StemWijzer 2025 — Exitpoll 22:15 & Coalitiebouwer",
   description:
-    "Volg de exitpoll van Ipsos I&O (21:45) en bouw coalities naar een meerderheid van 76 zetels.",
+    "Volg de exitpoll van Ipsos I&O (22:15) en bouw coalities naar een meerderheid van 76 zetels.",
   metadataBase: new URL("https://example.com"),
   openGraph: {
     title: "StemWijzer 2025",
@@ -27,7 +27,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                   StemWijzer 2025
                 </span>
                 <span className="text-lg font-semibold text-white">
-                  Exitpoll 21:45 & coalitiebouwer
+                  Exitpoll 22:15 & coalitiebouwer
                 </span>
               </div>
               <nav className="hidden gap-4 text-sm font-medium text-slate-300 md:flex">
@@ -49,7 +49,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           <main className="flex-1 bg-slate-950">{children}</main>
           <footer className="border-t border-white/10 bg-slate-900/80">
             <div className="mx-auto max-w-6xl px-4 py-6 text-sm text-slate-400">
-              Data: Ipsos I&O exitpoll 21:45 (geen wijziging, 29 okt 2025) · Tijdzone: {SITE_TZ}
+              Data: {DATA_PROVIDER_LABEL} (29 okt 2025) · Tijdzone: {SITE_TZ}
             </div>
           </footer>
         </div>

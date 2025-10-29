@@ -13,10 +13,10 @@ export default async function SlotpeilingPage() {
       <div className="flex flex-col gap-4 rounded-3xl border border-white/10 bg-slate-900/60 p-6 shadow-lg shadow-indigo-500/10">
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div>
-            <h1 className="text-3xl font-semibold text-white">Exitpoll 21:45</h1>
+            <h1 className="text-3xl font-semibold text-white">Exitpoll 22:15</h1>
             <p className="text-sm text-slate-300">Geen nieuwe cijfers doorgekregen; volgende update zodra Ipsos I&O publiceert.</p>
           </div>
-          <UseInBuilderButton label="Gebruik in bouwer" src="Exitpoll 21:45" />
+          <UseInBuilderButton label="Gebruik in bouwer" src="Exitpoll 22:15" />
         </div>
         <StatusStrip updatedAt={exitpoll.updatedAt} mode={mode} />
         <ForceUpdateButton />

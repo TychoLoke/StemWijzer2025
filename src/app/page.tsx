@@ -6,12 +6,12 @@ import { StatusStrip } from "@/components/status-strip";
 import { UseInBuilderButton } from "@/components/use-in-builder-button";
 import { ForceUpdateButton } from "@/components/force-update-button";
 import { MunicipalityResults } from "@/components/municipality-results";
-import { schiermonnikoogResults } from "@/data/municipal-results";
+import { schiermonnikoogResults, vlielandResults } from "@/data/municipal-results";
 
 export default async function HomePage() {
   const mode = "POST" as const;
   const exitpoll = await getExitPoll(mode);
-  const heroTitle = "Exitpoll 21:45 — stand ongewijzigd";
+  const heroTitle = "Exitpoll 22:15 — stand ongewijzigd";
   const heroSub = "Geen nieuwe cijfers doorgekregen; we blijven de 21:15-stand volgen en verversen opnieuw zodra er nieuws is.";
   const turnout = 76.3;
   const keyIssues = [
@@ -42,15 +42,18 @@ export default async function HomePage() {
       <section className="grid gap-8 lg:grid-cols-[3fr,2fr]">
         <div className="space-y-6 rounded-3xl border border-white/10 bg-slate-900/70 p-6 shadow-lg shadow-indigo-500/10">
           <div className="flex items-center justify-between gap-4">
-            <h2 className="text-2xl font-semibold text-white">Exitpoll 21:45</h2>
-            <UseInBuilderButton label="Gebruik in coalitiebouwer" src="Exitpoll 21:45" />
+            <h2 className="text-2xl font-semibold text-white">Exitpoll 22:15</h2>
+            <UseInBuilderButton label="Gebruik in coalitiebouwer" src="Exitpoll 22:15" />
           </div>
           <SeatBars parties={exitpoll.parties} majority={exitpoll.majority} />
         </div>
         <MiniCoalition parties={exitpoll.parties} majority={exitpoll.majority} />
       </section>
 
-      <MunicipalityResults result={schiermonnikoogResults} />
+      <div className="grid gap-6 lg:grid-cols-2">
+        <MunicipalityResults result={vlielandResults} />
+        <MunicipalityResults result={schiermonnikoogResults} />
+      </div>
 
       <section className="grid gap-6 lg:grid-cols-[1fr,1.2fr]">
         <div className="space-y-3 rounded-3xl border border-emerald-400/20 bg-emerald-500/10 p-6 text-sm text-emerald-100 shadow-lg shadow-emerald-500/10">
@@ -63,7 +66,7 @@ export default async function HomePage() {
         <div className="space-y-4 rounded-3xl border border-white/10 bg-slate-900/70 p-6 shadow-lg shadow-indigo-500/10">
           <div className="flex items-center justify-between">
             <h2 className="text-xl font-semibold text-white">Belangrijkste onderwerpen van 2025</h2>
-            <span className="text-xs uppercase tracking-wide text-slate-400">Peiling 21:45</span>
+            <span className="text-xs uppercase tracking-wide text-slate-400">Peiling 22:15</span>
           </div>
           <ul className="space-y-3">
             {keyIssues.map((issue) => (
@@ -82,7 +85,7 @@ export default async function HomePage() {
             ))}
           </ul>
           <p className="text-xs text-slate-400">
-            Bron: combinatie van exitpoll-vragen (Ipsos I&O) en aanvullende velddata om 21:45. Percentages verwijzen naar het aandeel kiezers dat het onderwerp als meest bepalend voor de stemkeuze noemde.
+            Bron: combinatie van exitpoll-vragen (Ipsos I&O) en aanvullende velddata om 22:15. Percentages verwijzen naar het aandeel kiezers dat het onderwerp als meest bepalend voor de stemkeuze noemde.
           </p>
         </div>
       </section>
