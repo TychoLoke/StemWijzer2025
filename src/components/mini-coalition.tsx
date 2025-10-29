@@ -3,34 +3,12 @@
 import { useMemo, useState } from "react";
 import { PartyProjection } from "@/types/poll";
 import clsx from "clsx";
+import { FEATURED_COALITION_PRESETS } from "@/lib/coalitions";
 
 interface MiniCoalitionProps {
   parties: PartyProjection[];
   majority: number;
 }
-
-const MINI_PRESETS: { name: string; orientation: string; parties: string[] }[] = [
-  {
-    name: "Sociaal-progressief akkoord",
-    orientation: "centrumlinks",
-    parties: ["glpvda", "d66", "cda", "sp", "pvdd", "denk", "volt"],
-  },
-  {
-    name: "Nationaal rechts kabinet",
-    orientation: "rechts",
-    parties: ["pvv", "vvd", "ja21", "cda", "bbb", "sgp"],
-  },
-  {
-    name: "Brede midden-coalitie",
-    orientation: "centrum",
-    parties: ["vvd", "d66", "cda", "glpvda"],
-  },
-  {
-    name: "Waddeneiland-bestuur",
-    orientation: "centrumrechts",
-    parties: ["d66", "cda", "vvd", "ja21"],
-  },
-];
 
 export function MiniCoalition({ parties, majority }: MiniCoalitionProps) {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
@@ -111,7 +89,7 @@ export function MiniCoalition({ parties, majority }: MiniCoalitionProps) {
       <div className="space-y-2 text-xs text-slate-300">
         <p className="font-semibold uppercase tracking-wide text-slate-400">Presets</p>
         <div className="flex flex-wrap gap-2">
-          {MINI_PRESETS.map((preset) => {
+          {FEATURED_COALITION_PRESETS.map((preset) => {
             const seats = preset.parties.reduce(
               (sum, id) => sum + (partyMap.get(id)?.seats ?? 0),
               0,

@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, type ReactNode } from "react";
 import clsx from "clsx";
 import { MunicipalityResultSet } from "@/types/municipality";
 
@@ -24,11 +24,12 @@ const dateFormatter = new Intl.DateTimeFormat("nl-NL", {
 
 interface MunicipalityResultsProps {
   result: MunicipalityResultSet;
+  action?: ReactNode;
 }
 
 const coalitionFocus = new Set(["d66", "cda", "vvd", "ja21"]);
 
-export function MunicipalityResults({ result }: MunicipalityResultsProps) {
+export function MunicipalityResults({ result, action }: MunicipalityResultsProps) {
   const coalitionShare = useMemo(
     () =>
       result.parties
@@ -47,8 +48,11 @@ export function MunicipalityResults({ result }: MunicipalityResultsProps) {
             <span className="text-xs uppercase tracking-[0.3em] text-indigo-300">Definitieve uitslag</span>
             <h2 className="text-2xl font-semibold text-white">{result.municipality} is binnen</h2>
           </div>
-          <div className="rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-[11px] text-emerald-100">
-            {result.reporting}
+          <div className="flex flex-wrap items-center gap-2">
+            <div className="rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-[11px] text-emerald-100">
+              {result.reporting}
+            </div>
+            {action}
           </div>
         </div>
         <p className="text-sm text-slate-300">

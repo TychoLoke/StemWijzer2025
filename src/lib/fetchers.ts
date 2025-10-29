@@ -58,10 +58,14 @@ export async function getExitPoll(mode: AppMode): Promise<ExitPollSnapshot> {
   }
 }
 
-export async function getSeats(mode: AppMode) {
+export async function getSeats(mode: AppMode, dataset?: string) {
   const baseUrl = resolveBaseUrl();
   try {
-    const response = await fetch(`${baseUrl}/api/seats`, getFetchInit(mode));
+    const url = new URL(`${baseUrl}/api/seats`);
+    if (dataset) {
+      url.searchParams.set("dataset", dataset);
+    }
+    const response = await fetch(url.toString(), getFetchInit(mode));
     if (!response.ok) {
       throw new Error(`Request failed with status ${response.status}`);
     }
@@ -81,7 +85,7 @@ export async function getSeats(mode: AppMode) {
       parties: fallback.parties,
       majority: fallback.majority,
       updatedAt: fallback.updatedAt,
-      sourceLabel: "exitpoll 22:15",
+      sourceLabel: dataset === "live" ? "Live tellingen — fallback" : "exitpoll 22:15",
     };
   }
 }

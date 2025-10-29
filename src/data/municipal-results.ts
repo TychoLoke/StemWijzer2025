@@ -1,4 +1,5 @@
 import { MunicipalityResultSet } from "@/types/municipality";
+import { aggregateMunicipalityResults, projectSeatsFromMunicipalities } from "@/lib/municipality";
 
 export const schiermonnikoogResults: MunicipalityResultSet = {
   municipality: "Schiermonnikoog",
@@ -395,3 +396,18 @@ export const vlielandResults: MunicipalityResultSet = {
     },
   ],
 };
+
+export const liveMunicipalityResults: MunicipalityResultSet[] = [
+  vlielandResults,
+  schiermonnikoogResults,
+];
+
+export const combinedMunicipalityResults = aggregateMunicipalityResults(liveMunicipalityResults, {
+  municipalityName: "Landelijk totaal (live)",
+  reportingLabel: `${liveMunicipalityResults.length} gemeenten binnen — live totaal`,
+  notePrefix: "Live gecombineerde telling van",
+});
+
+export const combinedMunicipalitySeatProjection = projectSeatsFromMunicipalities(
+  combinedMunicipalityResults,
+);
