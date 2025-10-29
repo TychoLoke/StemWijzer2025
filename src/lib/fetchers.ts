@@ -1,3 +1,4 @@
+import { headers } from "next/headers";
 import { AppMode } from "@/lib/time";
 import { SlotPeilingResponse } from "@/types/poll";
 
@@ -7,6 +8,18 @@ function resolveBaseUrl() {
   }
   if (process.env.VERCEL_URL) {
     return `https://${process.env.VERCEL_URL}`;
+  }
+  try {
+    const headerList = headers();
+    const host = headerList.get("host");
+    if (host) {
+      const forwardedProto = headerList.get("x-forwarded-proto");
+      const protocol = forwardedProto ?? (host.includes("localhost") ? "http" : "https");
+      return `${protocol}://${host}`;
+    }
+  } catch {
+    // headers() may throw when invoked outside of a request context (e.g. during build-time).
+    // In that situation we fall back to the localhost development URL defined below.
   }
   return "http://localhost:3000";
 }
