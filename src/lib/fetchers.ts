@@ -2,6 +2,11 @@ import { headers } from "next/headers";
 import { AppMode } from "@/lib/time";
 import { exitPollSnapshot } from "@/data/exitpoll";
 import { ExitPollSnapshot } from "@/types/poll";
+import {
+  combinedMunicipalityResults,
+  combinedMunicipalitySeatProjection,
+} from "@/data/municipal-results";
+import { MAJORITY } from "@/lib/constants";
 
 function cloneExitPollSnapshot(): ExitPollSnapshot {
   return {
@@ -80,12 +85,22 @@ export async function getSeats(mode: AppMode, dataset?: string) {
       `[exitpoll] Failed to load seat data from ${baseUrl}/api/seats, falling back to bundled data.`,
       error,
     );
+
+    if (dataset === "live") {
+      return {
+        parties: combinedMunicipalitySeatProjection,
+        majority: MAJORITY,
+        updatedAt: combinedMunicipalityResults.updatedAt,
+        sourceLabel: "Live tellingen — fallback",
+      } as const;
+    }
+
     const fallback = cloneExitPollSnapshot();
     return {
       parties: fallback.parties,
       majority: fallback.majority,
       updatedAt: fallback.updatedAt,
-      sourceLabel: dataset === "live" ? "Live tellingen — fallback" : "exitpoll 22:15",
-    };
+      sourceLabel: "Exitpoll 22:15",
+    } as const;
   }
 }
