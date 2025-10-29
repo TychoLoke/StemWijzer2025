@@ -94,7 +94,7 @@ export function CoalitionBuilder({ parties, sourceLabel }: CoalitionBuilderProps
   }, [selectedParties]);
 
   const majorityProgress = useMemo(() => {
-    if (MAJORITY === 0) return 0;
+    if (!MAJORITY) return 0;
     return Math.min(100, Math.round((totalSeats / MAJORITY) * 1000) / 10);
   }, [totalSeats]);
 
