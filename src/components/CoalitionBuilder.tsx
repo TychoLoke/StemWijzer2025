@@ -29,7 +29,7 @@ const SeatTooltip = ({ active, payload }: any) => {
 };
 
 export const CoalitionBuilder = () => {
-  const defaultPreset: keyof typeof PRESETS = "Peil.nl – 11 okt 2025";
+  const defaultPreset: keyof typeof PRESETS = "Slotpeiling – 29 okt 2025 20:00";
   const [presetKey, setPresetKey] = useState<keyof typeof PRESETS>(defaultPreset);
   const [seats, setSeats] = useState<SeatMap>({ ...PRESETS[defaultPreset] });
   const [selected, setSelected] = useState<Record<string, boolean>>({});
