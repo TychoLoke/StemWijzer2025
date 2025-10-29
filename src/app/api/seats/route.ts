@@ -6,6 +6,6 @@ export async function GET() {
     parties: exitPollSnapshot.parties,
     majority: exitPollSnapshot.majority,
     updatedAt: exitPollSnapshot.updatedAt,
-    sourceLabel: "exitpoll 21:15",
+    sourceLabel: "exitpoll 21:45",
   });
 }
