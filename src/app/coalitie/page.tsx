@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { getMode } from "@/lib/time";
 import { getSeats } from "@/lib/fetchers";
 import { CoalitionBuilder } from "@/components/coalition-builder";
@@ -22,7 +23,9 @@ export default async function CoalitiePage() {
         {mode === "POST" && <ForceUpdateButton />}
       </div>
 
-      <CoalitionBuilder parties={parties} />
+      <Suspense fallback={null}>
+        <CoalitionBuilder parties={parties} />
+      </Suspense>
     </div>
   );
 }

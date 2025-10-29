@@ -34,13 +34,17 @@ function resolveBaseUrl() {
   return "http://localhost:3000";
 }
 
+function getFetchInit(mode: AppMode) {
+  const revalidate = mode === "PRE" ? 60 : 900;
+  return {
+    next: { revalidate },
+  } as const;
+}
+
 export async function getSlotPeiling(mode: AppMode): Promise<SlotPeilingResponse> {
   const baseUrl = resolveBaseUrl();
   try {
-    const response = await fetch(`${baseUrl}/api/slotpeiling`, {
-      cache: mode === "PRE" ? "no-store" : undefined,
-      next: mode === "POST" ? { revalidate: 900 } : undefined,
-    });
+    const response = await fetch(`${baseUrl}/api/slotpeiling`, getFetchInit(mode));
     if (!response.ok) {
       throw new Error(`Request failed with status ${response.status}`);
     }
@@ -57,10 +61,7 @@ export async function getSlotPeiling(mode: AppMode): Promise<SlotPeilingResponse
 export async function getSeats(mode: AppMode) {
   const baseUrl = resolveBaseUrl();
   try {
-    const response = await fetch(`${baseUrl}/api/seats`, {
-      cache: mode === "PRE" ? "no-store" : undefined,
-      next: mode === "POST" ? { revalidate: 900 } : undefined,
-    });
+    const response = await fetch(`${baseUrl}/api/seats`, getFetchInit(mode));
     if (!response.ok) {
       throw new Error(`Request failed with status ${response.status}`);
     }
