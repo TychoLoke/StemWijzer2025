@@ -26,9 +26,9 @@ const MINI_PRESETS: { name: string; orientation: string; parties: string[] }[] =
     parties: ["vvd", "d66", "cda", "glpvda"],
   },
   {
-    name: "Ondernemerscoalitie",
+    name: "Waddeneiland-bestuur",
     orientation: "centrumrechts",
-    parties: ["vvd", "d66", "cda", "ja21", "bbb"],
+    parties: ["d66", "cda", "vvd", "ja21"],
   },
 ];
 

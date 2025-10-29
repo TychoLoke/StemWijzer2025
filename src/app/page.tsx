@@ -5,6 +5,8 @@ import { MiniCoalition } from "@/components/mini-coalition";
 import { StatusStrip } from "@/components/status-strip";
 import { UseInBuilderButton } from "@/components/use-in-builder-button";
 import { ForceUpdateButton } from "@/components/force-update-button";
+import { MunicipalityResults } from "@/components/municipality-results";
+import { schiermonnikoogResults } from "@/data/municipal-results";
 
 export default async function HomePage() {
   const mode = "POST" as const;
@@ -47,6 +49,8 @@ export default async function HomePage() {
         </div>
         <MiniCoalition parties={exitpoll.parties} majority={exitpoll.majority} />
       </section>
+
+      <MunicipalityResults result={schiermonnikoogResults} />
 
       <section className="grid gap-6 lg:grid-cols-[1fr,1.2fr]">
         <div className="space-y-3 rounded-3xl border border-emerald-400/20 bg-emerald-500/10 p-6 text-sm text-emerald-100 shadow-lg shadow-emerald-500/10">
