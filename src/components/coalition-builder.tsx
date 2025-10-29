@@ -25,9 +25,10 @@ const PRESETS: { name: string; parties: string[] }[] = [
 
 interface CoalitionBuilderProps {
   parties: PartyProjection[];
+  sourceLabel: string;
 }
 
-export function CoalitionBuilder({ parties }: CoalitionBuilderProps) {
+export function CoalitionBuilder({ parties, sourceLabel }: CoalitionBuilderProps) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -154,6 +155,9 @@ export function CoalitionBuilder({ parties }: CoalitionBuilderProps) {
         ref={builderRef}
         className="rounded-3xl border border-white/10 bg-slate-900/70 p-6 shadow-lg shadow-indigo-500/10"
       >
+        <p className="text-xs font-medium uppercase tracking-wide text-indigo-200">
+          Gebaseerd op {sourceLabel}
+        </p>
         <div className="flex flex-wrap items-baseline gap-4">
           <div className="flex items-center gap-2 text-4xl font-semibold text-white">
             {totalSeats}
@@ -227,7 +231,21 @@ export function CoalitionBuilder({ parties }: CoalitionBuilderProps) {
                       <span className="rounded-full bg-white/10 px-2 py-0.5 text-white/80">
                         {party.seats}
                       </span>
-                      <span className="text-slate-400">±{party.seatMargin}</span>
+                      <span
+                        className={clsx(
+                          "inline-flex items-center gap-1 rounded-full px-2 py-0.5",
+                          party.seatDelta > 0
+                            ? "bg-emerald-500/20 text-emerald-200"
+                            : party.seatDelta < 0
+                              ? "bg-rose-500/20 text-rose-200"
+                              : "bg-slate-700 text-slate-200"
+                        )}
+                      >
+                        {party.seatDelta > 0 ? "↑" : party.seatDelta < 0 ? "↓" : "→"}
+                        <span className="font-semibold">
+                          {party.seatDelta > 0 ? `+${party.seatDelta}` : party.seatDelta}
+                        </span>
+                      </span>
                     </span>
                   </button>
                 );
@@ -254,6 +272,10 @@ export function CoalitionBuilder({ parties }: CoalitionBuilderProps) {
           </div>
         </div>
       </div>
+
+      <p className="text-xs text-slate-400">
+        Dit is een exitpoll; de werkelijke uitslag kan afwijken.
+      </p>
 
       {toast && (
         <div className="fixed bottom-6 left-1/2 z-40 -translate-x-1/2 rounded-full border border-white/20 bg-slate-900/90 px-4 py-2 text-sm text-slate-100 shadow-lg shadow-indigo-500/20">

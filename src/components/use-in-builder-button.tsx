@@ -7,7 +7,7 @@ interface UseInBuilderButtonProps {
   src?: string;
 }
 
-export function UseInBuilderButton({ label = "Gebruik in coalitiebouwer", src = "slot" }: UseInBuilderButtonProps) {
+export function UseInBuilderButton({ label = "Gebruik in coalitiebouwer", src = "Exitpoll 21:15" }: UseInBuilderButtonProps) {
   const router = useRouter();
 
   return (

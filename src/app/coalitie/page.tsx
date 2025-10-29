@@ -1,14 +1,12 @@
 import { Suspense } from "react";
-import { getMode } from "@/lib/time";
 import { getSeats } from "@/lib/fetchers";
 import { CoalitionBuilder } from "@/components/coalition-builder";
 import { StatusStrip } from "@/components/status-strip";
 import { ForceUpdateButton } from "@/components/force-update-button";
 
 export default async function CoalitiePage() {
-  const nowIso = new Date().toISOString();
-  const mode = getMode(nowIso);
-  const { parties, majority, updatedAt } = await getSeats(mode);
+  const mode = "POST" as const;
+  const { parties, majority, updatedAt, sourceLabel } = await getSeats(mode);
 
   return (
     <div className="mx-auto flex w-full max-w-5xl flex-col gap-8 px-4 py-10">
@@ -20,11 +18,11 @@ export default async function CoalitiePage() {
           </p>
         </div>
         <StatusStrip updatedAt={updatedAt} mode={mode} />
-        {mode === "POST" && <ForceUpdateButton />}
+        <ForceUpdateButton />
       </div>
 
       <Suspense fallback={null}>
-        <CoalitionBuilder parties={parties} />
+        <CoalitionBuilder parties={parties} sourceLabel={sourceLabel ?? "Exitpoll 21:15"} />
       </Suspense>
     </div>
   );

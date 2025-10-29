@@ -11,11 +11,11 @@ export function StatusStrip({ updatedAt, mode }: StatusStripProps) {
 
   return (
     <div className="flex flex-wrap items-center gap-2 rounded-xl border border-white/10 bg-slate-900/70 px-4 py-3 text-sm text-slate-200">
-      <span>Laatst geüpdatet: {updatedLabel}</span>
+      <span className="font-semibold text-white">
+        Exitpoll — niet officiële uitslag — laatst bijgewerkt {updatedLabel}
+      </span>
       <span className="hidden text-slate-500 sm:inline">•</span>
-      <span>Volgende auto-update: {nextHint}</span>
-      <span className="hidden text-slate-500 sm:inline">•</span>
-      <span>Bron: Slotpeiling</span>
+      <span>Volgende update {nextHint}</span>
     </div>
   );
 }

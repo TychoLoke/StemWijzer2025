@@ -5,9 +5,9 @@ export default function UitlegPage() {
   return (
     <div className="mx-auto flex w-full max-w-4xl flex-col gap-8 px-4 py-10">
       <header className="rounded-3xl border border-white/10 bg-slate-900/70 p-6 shadow-lg shadow-indigo-500/10">
-        <h1 className="text-3xl font-semibold text-white">Hoe werkt de slotpeiling & coalitiebouwer?</h1>
+        <h1 className="text-3xl font-semibold text-white">Hoe werkt de exitpoll & coalitiebouwer?</h1>
         <p className="mt-3 text-sm text-slate-300">
-          In aanloop naar de verkiezingsavond volgen we de slotpeiling en vernieuwen we de cijfers zodra de stembussen sluiten.
+          Na sluiting van de stembussen schakelen we over op de exitpoll van Ipsos I&O. Elke 15 minuten verwerken we een nieuwe stand, met een handmatige “Nu verversen”-optie voor directe updates.
         </p>
       </header>
 
@@ -22,18 +22,21 @@ export default function UitlegPage() {
         <h2 className="text-xl font-semibold text-white">Tijdslijn</h2>
         <ul className="space-y-3 text-sm text-slate-300">
           <li>
-            <span className="font-semibold text-white">Voor 21:00 ({SITE_TZ}):</span> we tonen een live countdown tot {CUTOFF_ISO}. De cijfers zijn gefixeerd op de slotpeiling van Ipsos I&O.
+            <span className="font-semibold text-white">Voor 21:00 ({SITE_TZ}):</span> toonden we een live countdown en de slotpeiling als referentie.
           </li>
           <li>
-            <span className="font-semibold text-white">Na 21:00:</span> we verversen de data automatisch elke 15 minuten. Via de knop “Forceer update” kun je handmatig een her-validatie starten.
+            <span className="font-semibold text-white">21:00 – 21:15:</span> eerste exitpoll-flash. We schakelen de interface naar post-close modus en verwijderen de countdown.
           </li>
-        </ul>
+          <li>
+            <span className="font-semibold text-white">Vanaf 21:15:</span> elke 15 minuten een nieuwe exitpoll-stand. Met “Nu verversen” (handmatig) kun je de cache direct verversen tussen de vaste updates.
+          </li>
+      </ul>
       </section>
 
       <section className="space-y-4 rounded-3xl border border-white/10 bg-slate-900/60 p-6">
-        <h2 className="text-xl font-semibold text-white">Ranges & onzekerheid</h2>
+        <h2 className="text-xl font-semibold text-white">Onzekerheid & disclaimer</h2>
         <p className="text-sm text-slate-300">
-          Elke partij heeft een bandbreedte op basis van de gerapporteerde onzekerheidsmarge. In de grafieken zie je deze als tooltip, zodat je weet hoe stabiel de projectie is.
+          De exitpoll blijft een steekproef. Daarom plaatsen we onder elke grafiek de duidelijke waarschuwing “Dit is een exitpoll; de werkelijke uitslag kan afwijken.” De coalitiebouwer gebruikt dezelfde data, zodat coalities altijd op de laatste stand zijn gebaseerd.
         </p>
       </section>
     </div>

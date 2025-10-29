@@ -43,7 +43,7 @@ export function ForceUpdateButton({ className }: ForceUpdateButtonProps) {
         className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-medium text-white transition hover:border-white/40 hover:bg-white/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
         disabled={status === "loading"}
       >
-        {status === "loading" ? "Bezig…" : "Forceer update"}
+        {status === "loading" ? "Bezig…" : "Nu verversen"}
       </button>
       {message && (
         <p className="mt-2 text-xs text-slate-300">{message}</p>
