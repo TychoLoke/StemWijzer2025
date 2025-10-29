@@ -127,28 +127,24 @@ export function projectSeatsFromMunicipalities(
   const seats2025 = allocateSeats(result.parties, "votes2025", totalSeats);
   const seats2021 = allocateSeats(result.parties, "votes2021", totalSeats);
 
-  const withSeats = new Map<string, { seats: number; seats2021: number; name: string }>();
+  const projections: PartyProjection[] = result.parties
+    .map((party) => {
+      const seatsCurrent = seats2025.get(party.slug) ?? 0;
+      const seatsPrev = seats2021.get(party.slug) ?? 0;
 
-  result.parties.forEach((party) => {
-    const seatsCurrent = seats2025.get(party.slug) ?? 0;
-    const seatsPrev = seats2021.get(party.slug) ?? 0;
-    if (seatsCurrent > 0 || seatsPrev > 0) {
-      withSeats.set(party.slug, {
-        seats: seatsCurrent,
-        seats2021: seatsPrev,
+      return {
+        id: party.slug,
         name: party.name,
-      });
-    }
-  });
-
-  const projections: PartyProjection[] = Array.from(withSeats.entries())
-    .map(([slug, data]) => ({
-      id: slug,
-      name: data.name,
-      seats: data.seats,
-      seatDelta: data.seats - data.seats2021,
-    }))
-    .sort((a, b) => b.seats - a.seats || a.name.localeCompare(b.name));
+        seats: seatsCurrent,
+        seatDelta: seatsCurrent - seatsPrev,
+      };
+    })
+    .sort((a, b) => {
+      if (b.seats !== a.seats) {
+        return b.seats - a.seats;
+      }
+      return a.name.localeCompare(b.name);
+    });
 
   return projections;
 }
