@@ -9,18 +9,26 @@ import { parseMajorityHint } from "@/lib/time";
 import clsx from "clsx";
 import { getPartyColor, getPartyGradient } from "@/lib/party-colors";
 
-const PRESETS: { name: string; parties: string[] }[] = [
+const PRESETS: { name: string; orientation: string; parties: string[] }[] = [
   {
-    name: "Middenlinks 77",
-    parties: ["glpvda", "d66", "cda", "volt", "cu", "50plus", "sp"],
+    name: "Sociaal-progressief akkoord",
+    orientation: "centrumlinks",
+    parties: ["glpvda", "d66", "cda", "sp", "pvdd", "denk", "volt"],
   },
   {
-    name: "Rechts 78",
-    parties: ["vvd", "pvv", "ja21", "cda", "bbb", "sgp"],
+    name: "Nationaal rechts kabinet",
+    orientation: "rechts",
+    parties: ["pvv", "vvd", "ja21", "cda", "bbb", "sgp"],
   },
   {
-    name: "Brede coalitie 84",
-    parties: ["glpvda", "d66", "cda", "vvd", "volt", "pvdd"],
+    name: "Brede midden-coalitie",
+    orientation: "centrum",
+    parties: ["vvd", "d66", "cda", "glpvda"],
+  },
+  {
+    name: "Ondernemerscoalitie",
+    orientation: "centrumrechts",
+    parties: ["vvd", "d66", "cda", "ja21", "bbb"],
   },
 ];
 
@@ -501,17 +509,27 @@ export function CoalitionBuilder({ parties, sourceLabel }: CoalitionBuilderProps
             <p className="mt-1 text-sm text-slate-300">
               Sneltoetsen om populaire scenario&apos;s te laden.
             </p>
-            <div className="mt-4 flex flex-wrap gap-2">
-              {PRESETS.map((preset) => (
-                <button
-                  key={preset.name}
-                  type="button"
-                  onClick={() => applyPreset(preset.parties)}
-                  className="rounded-full border border-white/15 bg-white/5 px-4 py-2 text-sm font-medium text-slate-100 transition hover:border-white/40 hover:bg-white/10"
-                >
-                  {preset.name}
-                </button>
-              ))}
+            <div className="mt-4 grid gap-3 sm:grid-cols-2">
+              {PRESETS.map((preset) => {
+                const seats = preset.parties.reduce(
+                  (sum, id) => sum + (partyMap.get(id)?.seats ?? 0),
+                  0,
+                );
+                return (
+                  <button
+                    key={preset.name}
+                    type="button"
+                    onClick={() => applyPreset(preset.parties)}
+                    className="flex flex-col items-start gap-1 rounded-2xl border border-white/15 bg-white/5 px-4 py-3 text-left text-slate-100 transition hover:border-white/40 hover:bg-white/10"
+                  >
+                    <span className="text-[11px] uppercase tracking-wide text-indigo-200">
+                      {preset.orientation}
+                    </span>
+                    <span className="text-sm font-semibold text-white">{preset.name}</span>
+                    <span className="text-xs text-slate-300">{seats} zetels</span>
+                  </button>
+                );
+              })}
             </div>
           </section>
         </aside>

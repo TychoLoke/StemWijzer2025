@@ -1,15 +1,15 @@
 import { ExitPollSnapshot } from "@/types/poll";
 
 export const exitPollSnapshot: ExitPollSnapshot = {
-  updatedAt: "2025-10-29T21:15:00+01:00",
+  updatedAt: "2025-10-29T21:45:00+01:00",
   provider: {
-    id: "ipsos-io_exitpoll_2025-10-29T21:15",
-    label: "Ipsos I&O — Exitpoll 21:15",
-    note: "Gegevens afkomstig van de 21:15-stand van de exitpoll (Ipsos I&O).",
+    id: "ipsos-io_exitpoll_2025-10-29T21:45",
+    label: "Ipsos I&O — Exitpoll 21:45 (geen wijziging)",
+    note: "21:45-update leverde geen nieuwe cijfers op; we tonen de ongewijzigde 21:15-stand van Ipsos I&O.",
   },
   majority: 76,
   methodology: {
-    sample: "n≈20.000 stembusinterviews; realtime weging tot 21:15 CET",
+    sample: "n≈20.000 stembusinterviews; realtime weging, laatste controle om 21:45 CET",
     notes: "Resultaat is een exitpoll. Werkelijke uitslag kan afwijken.",
   },
   parties: [

@@ -30,6 +30,9 @@ export default function UitlegPage() {
           <li>
             <span className="font-semibold text-white">Vanaf 21:15:</span> elke 15 minuten een nieuwe exitpoll-stand. Met “Nu verversen” (handmatig) kun je de cache direct verversen tussen de vaste updates.
           </li>
+          <li>
+            <span className="font-semibold text-white">21:45:</span> geen nieuwe cijfers aangeleverd; de 21:15-stand blijft zichtbaar tot de volgende push van Ipsos I&O.
+          </li>
       </ul>
       </section>
 

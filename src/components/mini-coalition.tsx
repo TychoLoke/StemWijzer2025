@@ -9,9 +9,27 @@ interface MiniCoalitionProps {
   majority: number;
 }
 
-const MINI_PRESETS: { name: string; parties: string[] }[] = [
-  { name: "Progressief", parties: ["glpvda", "d66", "volt", "pvdd", "sp", "cu", "denk"] },
-  { name: "Rechts", parties: ["vvd", "pvv", "ja21", "cda", "bbb", "sgp"] },
+const MINI_PRESETS: { name: string; orientation: string; parties: string[] }[] = [
+  {
+    name: "Sociaal-progressief akkoord",
+    orientation: "centrumlinks",
+    parties: ["glpvda", "d66", "cda", "sp", "pvdd", "denk", "volt"],
+  },
+  {
+    name: "Nationaal rechts kabinet",
+    orientation: "rechts",
+    parties: ["pvv", "vvd", "ja21", "cda", "bbb", "sgp"],
+  },
+  {
+    name: "Brede midden-coalitie",
+    orientation: "centrum",
+    parties: ["vvd", "d66", "cda", "glpvda"],
+  },
+  {
+    name: "Ondernemerscoalitie",
+    orientation: "centrumrechts",
+    parties: ["vvd", "d66", "cda", "ja21", "bbb"],
+  },
 ];
 
 export function MiniCoalition({ parties, majority }: MiniCoalitionProps) {
@@ -93,18 +111,28 @@ export function MiniCoalition({ parties, majority }: MiniCoalitionProps) {
       <div className="space-y-2 text-xs text-slate-300">
         <p className="font-semibold uppercase tracking-wide text-slate-400">Presets</p>
         <div className="flex flex-wrap gap-2">
-          {MINI_PRESETS.map((preset) => (
-            <button
-              key={preset.name}
-              type="button"
-              onClick={() =>
-                setSelectedIds(preset.parties.filter((id) => partyMap.has(id)))
-              }
-              className="rounded-full border border-white/10 bg-white/5 px-3 py-1 font-medium text-white/90 hover:border-white/30 hover:bg-white/10"
-            >
-              {preset.name}
-            </button>
-          ))}
+          {MINI_PRESETS.map((preset) => {
+            const seats = preset.parties.reduce(
+              (sum, id) => sum + (partyMap.get(id)?.seats ?? 0),
+              0,
+            );
+            return (
+              <button
+                key={preset.name}
+                type="button"
+                onClick={() =>
+                  setSelectedIds(preset.parties.filter((id) => partyMap.has(id)))
+                }
+                className="flex min-w-[12rem] flex-col rounded-2xl border border-white/10 bg-white/5 px-3 py-2 text-left text-white/90 transition hover:border-white/30 hover:bg-white/10"
+              >
+                <span className="text-[10px] uppercase tracking-wide text-indigo-200">
+                  {preset.orientation}
+                </span>
+                <span className="text-sm font-semibold text-white">{preset.name}</span>
+                <span className="text-xs text-slate-300">{seats} zetels</span>
+              </button>
+            );
+          })}
         </div>
       </div>
 

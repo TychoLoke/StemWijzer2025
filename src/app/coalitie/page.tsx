@@ -22,7 +22,7 @@ export default async function CoalitiePage() {
       </div>
 
       <Suspense fallback={null}>
-        <CoalitionBuilder parties={parties} sourceLabel={sourceLabel ?? "Exitpoll 21:15"} />
+        <CoalitionBuilder parties={parties} sourceLabel={sourceLabel ?? "Exitpoll 21:45"} />
       </Suspense>
     </div>
   );
