@@ -15,6 +15,8 @@ export default async function CoalitiePage({ searchParams }: CoalitiePageProps) 
   const datasetParam = searchParams?.dataset;
   const dataset = typeof datasetParam === "string" && datasetParam === "live" ? "live" : undefined;
   const { parties, majority, updatedAt, sourceLabel } = await getSeats(mode, dataset);
+  const isLiveDataset = dataset === "live";
+  const displaySourceLabel = sourceLabel ?? "Exitpoll 22:15";
 
   return (
     <div className="mx-auto flex w-full max-w-5xl flex-col gap-8 px-4 py-10">
@@ -25,7 +27,7 @@ export default async function CoalitiePage({ searchParams }: CoalitiePageProps) 
             Stel je scenario samen en bekijk of je de meerderheid van {majority} zetels haalt.
           </p>
         </div>
-        <StatusStrip updatedAt={updatedAt} mode={mode} />
+        <StatusStrip updatedAt={updatedAt} mode={mode} sourceLabel={sourceLabel} isLive={isLiveDataset} />
         <div className="flex flex-wrap items-center gap-2 rounded-2xl border border-white/10 bg-slate-900/70 px-4 py-3 text-xs text-slate-200">
           <span className="font-semibold uppercase tracking-wide text-slate-300">Kies bron:</span>
           <div className="flex flex-wrap gap-2">
@@ -52,13 +54,13 @@ export default async function CoalitiePage({ searchParams }: CoalitiePageProps) 
               Live tellingen
             </Link>
           </div>
-          <span className="ml-auto text-[11px] uppercase tracking-wide text-indigo-200">{sourceLabel}</span>
+          <span className="ml-auto text-[11px] uppercase tracking-wide text-indigo-200">{displaySourceLabel}</span>
         </div>
         <ForceUpdateButton />
       </div>
 
       <Suspense fallback={null}>
-        <CoalitionBuilder parties={parties} sourceLabel={sourceLabel ?? "Exitpoll 22:15"} />
+        <CoalitionBuilder parties={parties} sourceLabel={displaySourceLabel} />
       </Suspense>
     </div>
   );
