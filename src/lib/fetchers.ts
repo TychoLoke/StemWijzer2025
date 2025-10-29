@@ -1,6 +1,16 @@
 import { headers } from "next/headers";
 import { AppMode } from "@/lib/time";
+import { slotPeilingData } from "@/data/slotpeiling";
 import { SlotPeilingResponse } from "@/types/poll";
+
+function cloneSlotPeilingData(): SlotPeilingResponse {
+  return {
+    ...slotPeilingData,
+    provider: { ...slotPeilingData.provider },
+    methodology: { ...slotPeilingData.methodology },
+    parties: slotPeilingData.parties.map((party) => ({ ...party })),
+  };
+}
 
 function resolveBaseUrl() {
   if (process.env.NEXT_PUBLIC_SITE_URL) {
@@ -26,28 +36,49 @@ function resolveBaseUrl() {
 
 export async function getSlotPeiling(mode: AppMode): Promise<SlotPeilingResponse> {
   const baseUrl = resolveBaseUrl();
-  const response = await fetch(`${baseUrl}/api/slotpeiling`, {
-    cache: mode === "PRE" ? "no-store" : undefined,
-    next: mode === "POST" ? { revalidate: 900 } : undefined,
-  });
-  if (!response.ok) {
-    throw new Error("Kon slotpeiling niet laden");
+  try {
+    const response = await fetch(`${baseUrl}/api/slotpeiling`, {
+      cache: mode === "PRE" ? "no-store" : undefined,
+      next: mode === "POST" ? { revalidate: 900 } : undefined,
+    });
+    if (!response.ok) {
+      throw new Error(`Request failed with status ${response.status}`);
+    }
+    return response.json();
+  } catch (error) {
+    console.error(
+      `[slotpeiling] Failed to load data from ${baseUrl}/api/slotpeiling, falling back to bundled data.`,
+      error,
+    );
+    return cloneSlotPeilingData();
   }
-  return response.json();
 }
 
 export async function getSeats(mode: AppMode) {
   const baseUrl = resolveBaseUrl();
-  const response = await fetch(`${baseUrl}/api/seats`, {
-    cache: mode === "PRE" ? "no-store" : undefined,
-    next: mode === "POST" ? { revalidate: 900 } : undefined,
-  });
-  if (!response.ok) {
-    throw new Error("Kon zetels niet laden");
+  try {
+    const response = await fetch(`${baseUrl}/api/seats`, {
+      cache: mode === "PRE" ? "no-store" : undefined,
+      next: mode === "POST" ? { revalidate: 900 } : undefined,
+    });
+    if (!response.ok) {
+      throw new Error(`Request failed with status ${response.status}`);
+    }
+    return response.json() as Promise<{
+      parties: SlotPeilingResponse["parties"];
+      majority: number;
+      updatedAt: string;
+    }>;
+  } catch (error) {
+    console.error(
+      `[slotpeiling] Failed to load seat data from ${baseUrl}/api/seats, falling back to bundled data.`,
+      error,
+    );
+    const fallback = cloneSlotPeilingData();
+    return {
+      parties: fallback.parties,
+      majority: fallback.majority,
+      updatedAt: fallback.updatedAt,
+    };
   }
-  return response.json() as Promise<{
-    parties: SlotPeilingResponse["parties"];
-    majority: number;
-    updatedAt: string;
-  }>;
 }
