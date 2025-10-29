@@ -1,6 +1,24 @@
 import type { SeatMap } from "../types";
 
 export const PRESETS: Record<string, SeatMap> = {
+  "Slotpeiling – 29 okt 2025 20:00": {
+    PVV: 32,
+    CDA: 24,
+    "GroenLinks/PvdA": 23,
+    VVD: 13,
+    JA21: 12,
+    D66: 13,
+    NSC: 0,
+    BBB: 4,
+    FVD: 4,
+    SP: 6,
+    "Partij voor de Dieren": 5,
+    ChristenUnie: 3,
+    SGP: 3,
+    Volt: 4,
+    DENK: 3,
+    Overigen: 1,
+  },
   "Peil.nl – 11 okt 2025": {
     PVV: 31,
     CDA: 22,
