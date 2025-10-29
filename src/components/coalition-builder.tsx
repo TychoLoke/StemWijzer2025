@@ -96,7 +96,7 @@ export function CoalitionBuilder({ parties, sourceLabel }: CoalitionBuilderProps
       label: string;
       parties: PartyProjection[];
       gradient: string;
-      orientation?: string;
+      orientation: string | undefined;
     };
 
     const describeOrientation = (scores: number[]) => {
